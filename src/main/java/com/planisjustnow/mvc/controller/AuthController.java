@@ -1,6 +1,6 @@
 package com.planisjustnow.mvc.controller;
 
-import com.planisjustnow.mvc.entity.AuthDTO;
+import com.planisjustnow.mvc.entity.AuthDto;
 import com.planisjustnow.mvc.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ public class AuthController {
     private AuthService authService;
     private String authEmailCode;
     @PostMapping("/auth/mail")
-    public void orderMailConfirm(@RequestBody AuthDTO authdto){
+    public void orderMailConfirm(@RequestBody AuthDto authdto){
         authService.sendEmail(authdto);
     }
 }

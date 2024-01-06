@@ -1,6 +1,6 @@
 package com.planisjustnow.mvc.entity;
 
-public class AuthDTO {
+public class AuthDto {
     String email;
 
     public String getEmail() {
