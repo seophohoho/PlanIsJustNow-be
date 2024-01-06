@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 @Controller
 @RequestMapping("/api")
 public class AuthController {
@@ -14,7 +15,11 @@ public class AuthController {
     private AuthService authService;
     private String authEmailCode;
     @PostMapping("/auth/mail")
-    public void orderMailConfirm(@RequestBody AuthDto authdto){
+    public void orderGetAuthCode(@RequestBody AuthDto authdto){
         authService.sendEmail(authdto);
+    }
+    @PostMapping("/auth/check")
+    public void orderCheckAuthCode(@RequestBody AuthDto authDto){
+        authService.checkAuthCode(authDto);
     }
 }

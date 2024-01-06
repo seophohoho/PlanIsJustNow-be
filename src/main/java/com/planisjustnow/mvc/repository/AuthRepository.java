@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthRepository extends JpaRepository<AuthEntity,String> {
-
+    AuthEntity findByEmail(String email);
 }

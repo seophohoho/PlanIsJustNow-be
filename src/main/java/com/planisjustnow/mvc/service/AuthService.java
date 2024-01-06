@@ -5,6 +5,7 @@ import com.planisjustnow.mvc.entity.AuthEntity;
 import com.planisjustnow.mvc.repository.AuthRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.Optional;
+
 @Service
 public class AuthService {
     @Autowired
@@ -49,5 +52,16 @@ public class AuthService {
     public AuthEntity saveAuth(AuthEntity entity){
         return authRepository.save(entity);
     }
-
+    @Transactional
+    public String findAuth(String email){
+        AuthEntity authEntity = authRepository.findByEmail(email);
+        return authEntity.getCode();
+    }
+    @Transactional
+    public void checkAuthCode(AuthDto dto){
+        if(dto.getCode().equals(findAuth(dto.getEmail()))){
+            System.out.println("success!");
+            authRepository.deleteById(dto.getEmail());
+        }
+    }
 }

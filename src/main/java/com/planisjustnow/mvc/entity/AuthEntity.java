@@ -28,11 +28,9 @@ public class AuthEntity {
     public void setCode(String code) {
         this.code = code;
     }
-
     public AuthEntity(){}
     public AuthEntity(String email, String code){
         this.email = email;
         this.code = code;
     }
-
 }
