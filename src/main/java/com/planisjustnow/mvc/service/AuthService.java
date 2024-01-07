@@ -44,9 +44,14 @@ public class AuthService {
         }
         return message;
     }
-    public void sendEmail(AuthDto dto){
+    public String sendEmail(AuthDto dto){
         MimeMessage emailForm = createMailMessage(dto,"PlanIsJustNow 인증 코드 입니다.");
-        emailSender.send(emailForm);
+        try{
+            emailSender.send(emailForm);
+        } catch(Exception e){
+            return "fail";
+        }
+        return "success";
     }
     @Transactional
     public AuthEntity saveAuth(AuthEntity entity){
@@ -54,14 +59,22 @@ public class AuthService {
     }
     @Transactional
     public String findAuth(String email){
-        AuthEntity authEntity = authRepository.findByEmail(email);
-        return authEntity.getCode();
+        AuthEntity authEntity = null;
+        try{
+            authEntity = authRepository.findByEmail(email);
+            return authEntity.getCode();
+        } catch(NullPointerException e){
+            return "";
+        }
     }
     @Transactional
-    public void checkAuthCode(AuthDto dto){
+    public String checkAuthCode(AuthDto dto){
         if(dto.getCode().equals(findAuth(dto.getEmail()))){
-            System.out.println("success!");
             authRepository.deleteById(dto.getEmail());
+            return "success";
+        }
+        else{
+            return "fail";
         }
     }
 }
