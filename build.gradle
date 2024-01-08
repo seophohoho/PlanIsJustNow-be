@@ -23,6 +23,8 @@ dependencies {
 	testImplementation group: 'com.h2database', name: 'h2', version: '2.2.224'
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.2.1'
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.3.2'
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
