@@ -26,7 +26,7 @@ public class AccountController {
         }
         else if(result.equals("fail:Email is already in use")){
             ResponseDto responseDto = new ResponseDto("fail","Email is already in use");
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.CONFLICT);
         }
         else{
             ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
