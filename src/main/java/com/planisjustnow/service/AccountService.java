@@ -1,8 +1,8 @@
-package com.planisjustnow.mvc.service;
+package com.planisjustnow.service;
 
-import com.planisjustnow.mvc.entity.AccountSignUpDto;
-import com.planisjustnow.mvc.entity.AccountSignUpEntity;
-import com.planisjustnow.mvc.repository.AccountRepository;
+import com.planisjustnow.data.dto.AccountSignUpDto;
+import com.planisjustnow.data.entity.AccountSignUpEntity;
+import com.planisjustnow.data.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

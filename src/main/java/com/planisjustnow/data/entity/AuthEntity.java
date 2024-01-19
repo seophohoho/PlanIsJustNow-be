@@ -1,4 +1,4 @@
-package com.planisjustnow.mvc.entity;
+package com.planisjustnow.data.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

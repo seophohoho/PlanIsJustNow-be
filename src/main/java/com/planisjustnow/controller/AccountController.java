@@ -1,11 +1,10 @@
-package com.planisjustnow.mvc.controller;
+package com.planisjustnow.controller;
 
-import com.planisjustnow.mvc.entity.AccountSignUpDto;
-import com.planisjustnow.mvc.entity.ResponseDto;
-import com.planisjustnow.mvc.service.AccountService;
+import com.planisjustnow.data.dto.AccountSignUpDto;
+import com.planisjustnow.data.dto.ResponseDto;
+import com.planisjustnow.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

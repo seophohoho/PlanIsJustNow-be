@@ -1,11 +1,10 @@
-package com.planisjustnow.mvc.service;
+package com.planisjustnow.service;
 
-import com.planisjustnow.mvc.entity.AuthDto;
-import com.planisjustnow.mvc.entity.AuthEntity;
-import com.planisjustnow.mvc.repository.AuthRepository;
+import com.planisjustnow.data.dto.AuthDto;
+import com.planisjustnow.data.entity.AuthEntity;
+import com.planisjustnow.data.repository.AuthRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.util.Optional;
 
 @Service
 public class AuthService {

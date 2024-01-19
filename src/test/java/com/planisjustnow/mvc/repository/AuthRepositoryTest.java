@@ -1,6 +1,7 @@
 package com.planisjustnow.mvc.repository;
 
-import com.planisjustnow.mvc.entity.AuthEntity;
+import com.planisjustnow.data.entity.AuthEntity;
+import com.planisjustnow.data.repository.AuthRepository;
 import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

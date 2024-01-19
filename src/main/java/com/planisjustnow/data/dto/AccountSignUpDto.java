@@ -1,4 +1,4 @@
-package com.planisjustnow.mvc.entity;
+package com.planisjustnow.data.dto;
 
 public class AccountSignUpDto {
     String email;

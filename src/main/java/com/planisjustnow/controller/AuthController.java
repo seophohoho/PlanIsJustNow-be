@@ -1,8 +1,8 @@
-package com.planisjustnow.mvc.controller;
+package com.planisjustnow.controller;
 
-import com.planisjustnow.mvc.entity.AuthDto;
-import com.planisjustnow.mvc.entity.ResponseDto;
-import com.planisjustnow.mvc.service.AuthService;
+import com.planisjustnow.data.dto.AuthDto;
+import com.planisjustnow.data.dto.ResponseDto;
+import com.planisjustnow.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
