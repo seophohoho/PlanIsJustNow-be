@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;
     private String authEmailCode;
-    @PostMapping("/auth/mail")
+    @PostMapping("mail")
     public ResponseEntity<ResponseDto> orderGetAuthCode(@RequestBody AuthDto authdto){
         String result = authService.sendEmail(authdto);
         ResponseDto responseDto;

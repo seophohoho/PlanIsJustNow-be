@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    @PostMapping("account/signup")
+    @PostMapping("signup")
     public ResponseEntity<ResponseDto> orderSignUp(@RequestBody AccountSignUpDto accountSignUpDto){
         String result = accountService.signUp(accountSignUpDto);
         if(result.equals("success")){

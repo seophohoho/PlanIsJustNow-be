@@ -1,7 +1,7 @@
 package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.AccountSignUpDto;
-import com.planisjustnow.data.entity.AccountSignUpEntity;
+import com.planisjustnow.data.entity.UserEntity;
 import com.planisjustnow.data.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +16,7 @@ public class AccountService {
 
 
     public String signUp(AccountSignUpDto accountSignUpDto){
-        AccountSignUpEntity accountInfo = new AccountSignUpEntity(accountSignUpDto.getEmail(),
+        UserEntity accountInfo = new UserEntity(accountSignUpDto.getEmail(),
                 passwordEncoder.encode(accountSignUpDto.getPassword()),
                 accountSignUpDto.getNickname(),
                 0);
@@ -32,7 +32,7 @@ public class AccountService {
         return "success";
     }
     @Transactional
-    public AccountSignUpEntity saveAccountInfo(AccountSignUpEntity accountSignUpEntity){
-        return accountRepository.save(accountSignUpEntity);
+    public UserEntity saveAccountInfo(UserEntity userEntity){
+        return accountRepository.save(userEntity);
     }
 }

@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "user_info")
-public class AccountSignUpEntity {
+public class UserEntity {
     @Id
     @Column(name="id")
     String email;
@@ -33,8 +33,8 @@ public class AccountSignUpEntity {
     public int getTodolistFailureCount() {
         return todolistFailureCount;
     }
-    public AccountSignUpEntity(){}
-    public AccountSignUpEntity(String email, String password, String nickname, int todolistFailureCount){
+    public UserEntity(){}
+    public UserEntity(String email, String password, String nickname, int todolistFailureCount){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
