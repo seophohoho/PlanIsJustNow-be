@@ -10,23 +10,7 @@ import jakarta.persistence.Table;
 public class PetEntity {
     @Id
     @Column(name="id")
-    int id;
+    Integer petId;
     @Column(name="species")
     String species;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getSpecies() {
-        return species;
-    }
-
-    public void setSpecies(String species) {
-        this.species = species;
-    }
 }

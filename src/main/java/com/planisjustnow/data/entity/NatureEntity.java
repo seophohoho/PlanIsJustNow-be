@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 public class NatureEntity {
     @Id
     @Column(name="id")
-    int id;
+    Integer natureId;
     @Column(name="name")
     String name;
 }

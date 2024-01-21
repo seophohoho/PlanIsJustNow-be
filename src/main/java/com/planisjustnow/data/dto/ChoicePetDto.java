@@ -1,8 +1,10 @@
 package com.planisjustnow.data.dto;
 
+import com.planisjustnow.data.entity.PetEntity;
+
 public class ChoicePetDto {
     String email;
-    String species;
+    Integer species;
     String nickname;
 
     public String getEmail() {
@@ -13,11 +15,11 @@ public class ChoicePetDto {
         this.email = email;
     }
 
-    public String getSpecies() {
+    public Integer getSpecies() {
         return species;
     }
 
-    public void setSpecies(String species) {
+    public void setSpecies(Integer species) {
         this.species = species;
     }
 
