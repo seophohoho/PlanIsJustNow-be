@@ -1,8 +1,10 @@
 package com.planisjustnow.service;
 
+import com.planisjustnow.data.dto.AccountSignInDto;
 import com.planisjustnow.data.dto.AccountSignUpDto;
 import com.planisjustnow.data.entity.UserEntity;
 import com.planisjustnow.data.repository.AccountRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
 
     public String signUp(AccountSignUpDto accountSignUpDto){
         UserEntity accountInfo = new UserEntity(accountSignUpDto.getEmail(),
@@ -31,6 +32,23 @@ public class AccountService {
         }
         return "success";
     }
+    public String signIn(AccountSignInDto accountSignInDto){
+        try{
+            UserEntity accountInfo = findAccountInfo(accountSignInDto.getEmail());
+            System.out.println(accountInfo.getPassword());
+            System.out.println(accountSignInDto.getPassword());
+            if(passwordEncoder.matches(accountSignInDto.getPassword(),accountInfo.getPassword())){
+                return "success";
+            }
+            else{
+                return "false";
+            }
+        } catch(NullPointerException e){
+            return "false";
+        }
+    }
+    @Transactional
+    public UserEntity findAccountInfo(String email){return accountRepository.findByEmail(email);}
     @Transactional
     public UserEntity saveAccountInfo(UserEntity userEntity){
         return accountRepository.save(userEntity);

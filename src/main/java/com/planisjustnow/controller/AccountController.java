@@ -1,5 +1,6 @@
 package com.planisjustnow.controller;
 
+import com.planisjustnow.data.dto.AccountSignInDto;
 import com.planisjustnow.data.dto.AccountSignUpDto;
 import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.service.AccountService;
@@ -31,5 +32,22 @@ public class AccountController {
             ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
+    }
+    @PostMapping("signin")
+    public ResponseEntity<ResponseDto> orderSignIn(@RequestBody AccountSignInDto accountSignInDto){
+        String result = accountService.signIn(accountSignInDto);
+        if(result.equals("success")){
+            ResponseDto responseDto = new ResponseDto("success",".");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        }
+        else if(result.equals("not matche")){
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+        else{
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

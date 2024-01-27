@@ -25,6 +25,8 @@ dependencies {
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.3.2'
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	testImplementation 'org.springframework.security:spring-security-test'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+	annotationProcessor('org.projectlombok:lombok')
 }
 
 tasks.named('test') {
