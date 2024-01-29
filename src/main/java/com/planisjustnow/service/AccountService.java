@@ -35,9 +35,8 @@ public class AccountService {
     public String signIn(AccountSignInDto accountSignInDto){
         try{
             UserEntity accountInfo = findAccountInfo(accountSignInDto.getEmail());
-            System.out.println(accountInfo.getPassword());
-            System.out.println(accountSignInDto.getPassword());
             if(passwordEncoder.matches(accountSignInDto.getPassword(),accountInfo.getPassword())){
+
                 return "success";
             }
             else{
