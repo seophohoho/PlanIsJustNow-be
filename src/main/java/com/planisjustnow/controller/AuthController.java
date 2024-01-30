@@ -31,7 +31,7 @@ public class AuthController {
         }
 
     }
-    @PostMapping("/auth/check")
+    @PostMapping("check")
     public ResponseEntity<ResponseDto> orderCheckAuthCode(@RequestBody AuthDto authDto){
         String result = authService.checkAuthCode(authDto);
         if(result.equals("success")){
