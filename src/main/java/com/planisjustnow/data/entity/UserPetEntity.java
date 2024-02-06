@@ -13,7 +13,7 @@ public class UserPetEntity {
     private Integer idx;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity user_id;
+    private UserEntity userId;
     @ManyToOne
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     private PetEntity petId;
@@ -33,8 +33,8 @@ public class UserPetEntity {
         this.idx = idx;
     }
 
-    public void setUser_id(UserEntity user_id) {
-        this.user_id = user_id;
+    public void setUserId(UserEntity userId) {
+        this.userId = userId;
     }
 
     public void setPetId(PetEntity petId) {

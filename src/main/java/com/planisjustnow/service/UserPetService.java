@@ -1,6 +1,7 @@
 package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.ChoicePetDto;
+import com.planisjustnow.data.dto.UserInfoDto;
 import com.planisjustnow.data.entity.NatureEntity;
 import com.planisjustnow.data.entity.PetEntity;
 import com.planisjustnow.data.entity.UserEntity;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 public class UserPetService {
@@ -38,7 +40,7 @@ public class UserPetService {
         NatureEntity entity3 = natureRepository.findByNatureId(natureId);
         UserPetEntity userPetEntity = new UserPetEntity();
         try{
-            userPetEntity.setUser_id(entity1);
+            userPetEntity.setUserId(entity1);
             userPetEntity.setPetId(entity2);
             userPetEntity.setNatureId(entity3);
             userPetEntity.setPetName(choicePetDto.getNickname());
@@ -59,5 +61,22 @@ public class UserPetService {
     private int getRandomMaxFriendship(){
         SecureRandom random = new SecureRandom();
         return random.nextInt(maxFriendShip) + minFriendship;
+    }
+    @Transactional
+    public String isHasPet(UserInfoDto userInfoDto){
+        try {
+            List<UserPetEntity> userPetList = findUserPetInfo(userInfoDto.getEmail());
+            if(userPetList.size() > 0){
+                return "success:has";
+            }
+            else{
+                return "success:nothing";
+            }
+        }catch(NullPointerException e){
+            return "fail:Unexpected error";
+        }
+    }
+    public List<UserPetEntity> findUserPetInfo(String email){
+        return userPetRepository.findAllByUserId(email);
     }
 }

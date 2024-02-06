@@ -48,6 +48,5 @@ public class AccountController {
             ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
-
     }
 }
