@@ -1,12 +1,11 @@
 package com.planisjustnow.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 
-@Builder
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user_info")
 public class UserEntity {
@@ -19,6 +18,8 @@ public class UserEntity {
     String nickname;
     @Column(name="todolist_failure_count")
     int todolistFailureCount;
+    @OneToMany(mappedBy = "userId")
+    private List<UserPetEntity> userEntities = new ArrayList<UserPetEntity>();
 
     public String getEmail() {
         return email;

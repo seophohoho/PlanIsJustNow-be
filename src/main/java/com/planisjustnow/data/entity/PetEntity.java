@@ -1,16 +1,33 @@
 package com.planisjustnow.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Builder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pet_info")
 public class PetEntity {
     @Id
     @Column(name="id")
-    Integer petId;
+    private Integer petId;
     @Column(name="species")
-    String species;
+    private String species;
+    @OneToMany(mappedBy = "petId")
+    private List<UserPetEntity> petEntities = new ArrayList<UserPetEntity>();
+    public Integer getPetId() {
+        return petId;
+    }
+    public void setPetId(Integer petId) {
+        this.petId = petId;
+    }
+
+    public String getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
 }

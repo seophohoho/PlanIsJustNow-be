@@ -44,9 +44,9 @@ public class UserPetService {
             userPetEntity.setPetId(entity2);
             userPetEntity.setNatureId(entity3);
             userPetEntity.setPetName(choicePetDto.getNickname());
-            userPetEntity.setPetMaxFriendship(maxFriendship);
-            userPetEntity.setPetCurrentFriendship(0);
-            userPetEntity.setPetRunWayCount(0);
+            userPetEntity.setMaxFriendship(maxFriendship);
+            userPetEntity.setCurrentFriendship(0);
+            userPetEntity.setRunWayCount(0);
             userPetRepository.save(userPetEntity);
         }
         catch(Exception e){
@@ -66,6 +66,7 @@ public class UserPetService {
     public String isHasPet(UserInfoDto userInfoDto){
         try {
             List<UserPetEntity> userPetList = findUserPetInfo(userInfoDto.getEmail());
+            System.out.println(userPetList);
             if(userPetList.size() > 0){
                 return "success:has";
             }
@@ -77,6 +78,6 @@ public class UserPetService {
         }
     }
     public List<UserPetEntity> findUserPetInfo(String email){
-        return userPetRepository.findAllByUserId(email);
+        return userPetRepository.findAllByUserIdEmail(email);
     }
 }

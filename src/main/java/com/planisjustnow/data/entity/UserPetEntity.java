@@ -2,6 +2,8 @@ package com.planisjustnow.data.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -23,41 +25,73 @@ public class UserPetEntity {
     @Column(name="name")
     private String petName;
     @Column(name="max_friendship")
-    private Integer petMaxFriendship;
+    private int maxFriendship;
     @Column(name="current_friendship")
-    private Integer petCurrentFriendship;
+    private int currentFriendship;
     @Column(name="run_way_count")
-    private Integer petRunWayCount;
+    private int runWayCount;
+
+    public Integer getIdx() {
+        return idx;
+    }
 
     public void setIdx(Integer idx) {
         this.idx = idx;
+    }
+
+    public UserEntity getUserId() {
+        return userId;
     }
 
     public void setUserId(UserEntity userId) {
         this.userId = userId;
     }
 
+    public PetEntity getPetId() {
+        return petId;
+    }
+
     public void setPetId(PetEntity petId) {
         this.petId = petId;
+    }
+
+    public NatureEntity getNatureId() {
+        return natureId;
     }
 
     public void setNatureId(NatureEntity natureId) {
         this.natureId = natureId;
     }
 
+    public String getPetName() {
+        return petName;
+    }
+
     public void setPetName(String petName) {
         this.petName = petName;
     }
 
-    public void setPetMaxFriendship(Integer petMaxFriendship) {
-        this.petMaxFriendship = petMaxFriendship;
+    public int getMaxFriendship() {
+        return maxFriendship;
     }
 
-    public void setPetCurrentFriendship(Integer petCurrentFriendship) {
-        this.petCurrentFriendship = petCurrentFriendship;
+    public void setMaxFriendship(int maxFriendship) {
+        this.maxFriendship = maxFriendship;
     }
 
-    public void setPetRunWayCount(Integer petRunWayCount) {
-        this.petRunWayCount = petRunWayCount;
+    public int getCurrentFriendship() {
+        return currentFriendship;
+    }
+
+    public void setCurrentFriendship(int currentFriendship) {
+        this.currentFriendship = currentFriendship;
+    }
+
+    public int getRunWayCount() {
+        return runWayCount;
+    }
+
+    public void setRunWayCount(int runWayCount) {
+        this.runWayCount = runWayCount;
     }
 }
