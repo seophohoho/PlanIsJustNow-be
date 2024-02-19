@@ -22,11 +22,11 @@ public class AuthController {
         String result = authService.sendEmail(authdto);
         ResponseDto responseDto;
         if(result.equals("success")){
-            responseDto = new ResponseDto("success",".");
+            responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else {
-            responseDto = new ResponseDto("fail","Unexpected error");
+            responseDto = new ResponseDto("fail","Unexpected error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
 
@@ -35,11 +35,11 @@ public class AuthController {
     public ResponseEntity<ResponseDto> orderCheckAuthCode(@RequestBody AuthDto authDto){
         String result = authService.checkAuthCode(authDto);
         if(result.equals("success")){
-            ResponseDto responseDto = new ResponseDto("success",".");
+            ResponseDto responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }

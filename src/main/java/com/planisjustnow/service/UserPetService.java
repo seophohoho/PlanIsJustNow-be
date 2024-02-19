@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserPetService {
@@ -63,19 +66,24 @@ public class UserPetService {
         return random.nextInt(maxFriendShip) + minFriendship;
     }
     @Transactional
-    public String isHasPet(UserInfoDto userInfoDto){
+    public Map<String, Object> isHasPet(UserInfoDto userInfoDto){
+        Map<String, Object> resultMap = new HashMap<>();
         try {
             List<UserPetEntity> userPetList = findUserPetInfo(userInfoDto.getEmail());
             System.out.println(userPetList);
             if(userPetList.size() > 0){
-                return "success:has";
+                resultMap.put("result", "success:has");
+                resultMap.put("userPetList", userPetList);
             }
             else{
-                return "success:nothing";
+                resultMap.put("result", "success:nothing");
+                resultMap.put("userPetList", Collections.emptyList());
             }
         }catch(NullPointerException e){
-            return "fail:Unexpected error";
+            resultMap.put("result", "fail:Unexpected error");
+            resultMap.put("userPetList", null);
         }
+        return resultMap;
     }
     public List<UserPetEntity> findUserPetInfo(String email){
         return userPetRepository.findAllByUserIdEmail(email);

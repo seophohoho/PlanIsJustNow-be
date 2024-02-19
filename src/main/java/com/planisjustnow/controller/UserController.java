@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.awt.*;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/user")
@@ -25,27 +26,27 @@ public class UserController {
     public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto){
         String result = userPetService.setUserPet(choicePetDto);
         if(result.equals("success")){
-            ResponseDto responseDto = new ResponseDto("success",".");
+            ResponseDto responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
     @PostMapping("has-pet")
     public ResponseEntity<ResponseDto> orderIsHasPet(@RequestBody UserInfoDto userInfoDto){
-        String result = userPetService.isHasPet(userInfoDto);
-        if(result.equals("success:has")){
-            ResponseDto responseDto = new ResponseDto("success","has");
+        Map<String,Object> result = userPetService.isHasPet(userInfoDto);
+        if(result.get("result").equals("success:has")){
+            ResponseDto responseDto = new ResponseDto("success","has",result.get("userPetList"));
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
-        else if(result.equals("success:nothing")){
-            ResponseDto responseDto = new ResponseDto("success","nothing");
+        else if(result.get("result").equals("success:nothing")){
+            ResponseDto responseDto = new ResponseDto("success","nothing",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error");
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
