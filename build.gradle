@@ -28,6 +28,7 @@ dependencies {
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
 	annotationProcessor('org.projectlombok:lombok')
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	implementation group: 'org.thymeleaf', name: 'thymeleaf', version: '2.0.5'
 }
 
 tasks.named('test') {

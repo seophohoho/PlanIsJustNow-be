@@ -26,7 +26,7 @@ public class AuthController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else {
-            responseDto = new ResponseDto("fail","Unexpected error",null);
+            responseDto = new ResponseDto("fail","nothing data.",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
 
