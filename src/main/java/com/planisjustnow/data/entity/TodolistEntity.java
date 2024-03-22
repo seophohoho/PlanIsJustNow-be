@@ -1,11 +1,14 @@
 package com.planisjustnow.data.entity;
 
+import com.planisjustnow.data.dto.TodoListDto;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Entity
 @Table(name = "todolist")
 public class TodolistEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
     private Integer idx;
     @ManyToOne
@@ -13,42 +16,44 @@ public class TodolistEntity {
     private UserEntity userId;
     @Column(name = "title")
     private String title;
-    @Column(name = "date")
-    private String date;
+    @Column(name = "start_date")
+    private String startDate;
+    @Column(name = "end_date")
+    private String endDate;
     @Column(name = "time")
     private String time;
-    @Column(name = "important")
-    private Integer important;
-
+    @Column(name = "is_important")
+    private Integer isImportant;
+    @Column(name = "is_complete")
+    private Integer isComplete;
+    public Integer getIsImportant() {
+        return isImportant;
+    }
+    public void setIsImportant(Integer isImportant) {
+        this.isImportant = isImportant;
+    }
     public Integer getIdx() {
         return idx;
     }
-
     public void setIdx(Integer idx) {
         this.idx = idx;
     }
     public UserEntity getUserId() {
         return userId;
     }
-
     public void setUserId(UserEntity userId) {
         this.userId = userId;
     }
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
+    public String getStartDate() {return startDate;}
+    public void setStartDate(String startDate) {this.startDate = startDate;}
+    public String getEndDate() {return endDate;}
+    public void setEndDate(String endDate) {this.endDate = endDate;}
 
     public String getTime() {
         return time;
@@ -57,12 +62,19 @@ public class TodolistEntity {
     public void setTime(String time) {
         this.time = time;
     }
-
-    public Integer getImportant() {
-        return important;
+    public Integer getIsComplete() {
+        return isComplete;
     }
-
-    public void setImportant(Integer important) {
-        this.important = important;
+    public void setIsComplete(Integer isComplete) {
+        this.isComplete = isComplete;
+    }
+    public TodolistEntity(UserEntity userId,String title,String startDate,String endDate,String time, Integer isImportant,Integer isComplete){
+        this.userId = userId;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.time = time;
+        this.isImportant = isImportant;
+        this.isComplete = isComplete;
     }
 }
