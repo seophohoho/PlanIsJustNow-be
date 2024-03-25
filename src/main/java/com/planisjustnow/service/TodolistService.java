@@ -1,6 +1,7 @@
 package com.planisjustnow.service;
 
-import com.planisjustnow.data.dto.TodoListDto;
+import com.planisjustnow.data.dto.TodoListAddDto;
+import com.planisjustnow.data.dto.TodoListDeleteDto;
 import com.planisjustnow.data.entity.TodolistEntity;
 import com.planisjustnow.data.entity.UserEntity;
 import com.planisjustnow.data.repository.TodolistRepository;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TodolistService {
@@ -20,32 +18,40 @@ public class TodolistService {
     private TodolistRepository todolistRepository;
     @Autowired
     private UserRepository userRepository;
-    public String addTodolist(TodoListDto todoListDto){
-        Optional<UserEntity> user = userRepository.findById(todoListDto.getUserId()); // UserEntity 조회
+    public String addTodolist(TodoListAddDto todoListAddDto){
+        Optional<UserEntity> user = userRepository.findById(todoListAddDto.getUserId()); // UserEntity 조회
         if(user.isPresent()){
-            TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListDto.getTitle(), todoListDto.getStartDate(),todoListDto.getEndDate(),todoListDto.getTime(), todoListDto.getIsImportant(), 0);
+            TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListAddDto.getTitle(), todoListAddDto.getStartDate(), todoListAddDto.getTime(), todoListAddDto.getIsImportant(), 0);
             todolistRepository.save(todolistEntity);
             return "success";
         }
         return "fail";
     }
-    public Map<String,Object> selectTodolist(String email){
-        Map<String,Object> result = new HashMap<>();
-        try{
-            List<TodolistEntity> lst = todolistRepository.findAllByUserIdEmail(email);
-            if(lst.size() > 0){
-                result.put("result","success");
-                result.put("lst",lst);
-            }
-            else if(lst.size() == 0){
-                result.put("result","success-empty");
-                result.put("lst",lst);
-            }
-        }catch(NullPointerException e){
-            result.put("result","fail:Null_point_exception");
-        }catch(EmptyResultDataAccessException e) {
-            result.put("result", "fail:Empty_result_data_access_exception");
+    public String deleteTodolist(TodoListDeleteDto todoListDeleteDto){
+        try {
+            userRepository.deleteById(todoListDeleteDto.getUserId());
+            return "success";
         }
-        return result;
+        catch (NullPointerException e){
+
+        }
+        return "";
+    }
+    public Map<String, List<Map<String, Object>>> selectTodolist(String userId) {
+        Map<String, List<Map<String, Object>>> groupedTasks = new HashMap<>();
+        List<TodolistEntity> tasks = todolistRepository.findAllByUserIdEmail(userId);
+
+        for (TodolistEntity task : tasks) {
+            String startDate = task.getStartDate();
+            Map<String, Object> taskDetails = new HashMap<>();
+            taskDetails.put("title", task.getTitle());
+            taskDetails.put("time", task.getTime());
+            taskDetails.put("isImportant", task.getIsImportant());
+            taskDetails.put("isComplete", task.getIsComplete());
+
+            groupedTasks.computeIfAbsent(startDate, k -> new ArrayList<>()).add(taskDetails);
+        }
+
+        return groupedTasks;
     }
 }

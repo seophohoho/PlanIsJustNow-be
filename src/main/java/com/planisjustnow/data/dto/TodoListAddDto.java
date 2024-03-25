@@ -1,12 +1,9 @@
 package com.planisjustnow.data.dto;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-
-public class TodoListDto {
+public class TodoListAddDto {
     String userId;
     String title;
     String startDate;
-    String endDate;
     String time;
     Integer isImportant;
 
@@ -32,14 +29,6 @@ public class TodoListDto {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 
     public String getTime() {

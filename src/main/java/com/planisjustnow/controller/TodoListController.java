@@ -1,7 +1,8 @@
 package com.planisjustnow.controller;
 
 import com.planisjustnow.data.dto.ResponseDto;
-import com.planisjustnow.data.dto.TodoListDto;
+import com.planisjustnow.data.dto.TodoListAddDto;
+import com.planisjustnow.data.dto.TodoListDeleteDto;
 import com.planisjustnow.data.dto.UserInfoDto;
 import com.planisjustnow.service.TodolistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -18,9 +21,9 @@ public class TodoListController {
     @Autowired
     private TodolistService todolistService;
     @PostMapping("add")
-    public ResponseEntity<ResponseDto> orderAddTodolist(@RequestBody TodoListDto todoListDto){
+    public ResponseEntity<ResponseDto> orderAddTodolist(@RequestBody TodoListAddDto todoListAddDto){
         ResponseDto responseDto;
-        String result = todolistService.addTodolist(todoListDto);
+        String result = todolistService.addTodolist(todoListAddDto);
         if(result.equals("success")){
             responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
@@ -31,27 +34,26 @@ public class TodoListController {
         }
         return null;
     }
-    @PostMapping("select")
-    public ResponseEntity<ResponseDto> orderSelectTodolist(@RequestBody UserInfoDto userInfoDto){
-        Map<String,Object> result = todolistService.selectTodolist(userInfoDto.getEmail());
+    @PostMapping("delete")
+    public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodoListDeleteDto todoListDeleteDto){
         ResponseDto responseDto;
-        if(result.get("result").equals("success")){
-            responseDto = new ResponseDto("success",".",result.get("lst"));
+        String result = todolistService.deleteTodolist(todoListDeleteDto);
+        if(result.equals("success")){
+            responseDto = new ResponseDto("fail",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
-        else if(result.get("result").equals("success-empty")){
-            responseDto = new ResponseDto("success","empty",result.get("lst"));
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
-        }
-        else if(result.equals("fail:Null_point_exception")){
-            responseDto = new ResponseDto("fail","Null point error",null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
-        }
-        else if(result.equals("fail:Empty_result_data_access_exception")){
-            responseDto = new ResponseDto("fail","Empty result data access error",null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        else if(result.equals("fail")){
+
         }
         return null;
+    }
+    @PostMapping("/select")
+    public ResponseEntity<?> selectTodolist(@RequestBody UserInfoDto userInfoDto) {
+        Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
+        if (tasks.isEmpty()) {
+            return ResponseEntity.ok(new ResponseDto("success", "empty", new ArrayList<>()));
+        }
+        return ResponseEntity.ok(new ResponseDto("success", ".", tasks));
     }
 
 }

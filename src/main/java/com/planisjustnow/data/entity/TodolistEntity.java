@@ -1,8 +1,6 @@
 package com.planisjustnow.data.entity;
 
-import com.planisjustnow.data.dto.TodoListDto;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Entity
 @Table(name = "todolist")
@@ -18,8 +16,6 @@ public class TodolistEntity {
     private String title;
     @Column(name = "start_date")
     private String startDate;
-    @Column(name = "end_date")
-    private String endDate;
     @Column(name = "time")
     private String time;
     @Column(name = "is_important")
@@ -52,13 +48,9 @@ public class TodolistEntity {
     }
     public String getStartDate() {return startDate;}
     public void setStartDate(String startDate) {this.startDate = startDate;}
-    public String getEndDate() {return endDate;}
-    public void setEndDate(String endDate) {this.endDate = endDate;}
-
     public String getTime() {
         return time;
     }
-
     public void setTime(String time) {
         this.time = time;
     }
@@ -68,11 +60,11 @@ public class TodolistEntity {
     public void setIsComplete(Integer isComplete) {
         this.isComplete = isComplete;
     }
-    public TodolistEntity(UserEntity userId,String title,String startDate,String endDate,String time, Integer isImportant,Integer isComplete){
+    TodolistEntity(){}
+    public TodolistEntity(UserEntity userId,String title,String startDate,String time, Integer isImportant,Integer isComplete){
         this.userId = userId;
         this.title = title;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.time = time;
         this.isImportant = isImportant;
         this.isComplete = isComplete;
