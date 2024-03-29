@@ -1,7 +1,6 @@
 package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.TodoListAddDto;
-import com.planisjustnow.data.dto.TodoListDeleteDto;
 import com.planisjustnow.data.entity.TodolistEntity;
 import com.planisjustnow.data.entity.UserEntity;
 import com.planisjustnow.data.repository.TodolistRepository;
@@ -27,15 +26,15 @@ public class TodolistService {
         }
         return "fail";
     }
-    public String deleteTodolist(TodoListDeleteDto todoListDeleteDto){
+    public String deleteTodolist(String userId,String title,String startDate,String time){
         try {
-            userRepository.deleteById(todoListDeleteDto.getUserId());
+            Optional<UserEntity> user = userRepository.findById(userId); // UserEntity 조회
+            todolistRepository.deleteByUserIdAndTitleAndStartDateAndTimeAndIsCompleteFalse(user.get().getEmail(),title,startDate,time);
             return "success";
         }
         catch (NullPointerException e){
-
+            return "fail";
         }
-        return "";
     }
     public Map<String, List<Map<String, Object>>> selectTodolist(String userId) {
         Map<String, List<Map<String, Object>>> groupedTasks = new HashMap<>();
