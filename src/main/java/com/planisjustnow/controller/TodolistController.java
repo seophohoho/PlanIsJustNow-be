@@ -49,7 +49,7 @@ public class TodoListController {
         return null;
     }
     @PostMapping("/select")
-    public ResponseEntity<?> selectTodolist(@RequestBody UserInfoDto userInfoDto) {
+    public ResponseEntity<?> orderSelectTodolist(@RequestBody UserInfoDto userInfoDto) {
         Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
         if (tasks.isEmpty()) {
             return ResponseEntity.ok(new ResponseDto("success", "empty", new ArrayList<>()));
