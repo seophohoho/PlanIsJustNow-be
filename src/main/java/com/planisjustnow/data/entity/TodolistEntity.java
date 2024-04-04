@@ -8,7 +8,7 @@ public class TodolistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private Integer idx;
+    private Long idx;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity userId;
@@ -28,10 +28,10 @@ public class TodolistEntity {
     public void setIsImportant(Integer isImportant) {
         this.isImportant = isImportant;
     }
-    public Integer getIdx() {
+    public Long getIdx() {
         return idx;
     }
-    public void setIdx(Integer idx) {
+    public void setIdx(Long idx) {
         this.idx = idx;
     }
     public UserEntity getUserId() {

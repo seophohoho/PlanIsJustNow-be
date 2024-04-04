@@ -1,9 +1,6 @@
 package com.planisjustnow.controller;
 
-import com.planisjustnow.data.dto.ResponseDto;
-import com.planisjustnow.data.dto.TodoListAddDto;
-import com.planisjustnow.data.dto.UserInfoDto;
-import com.planisjustnow.data.entity.UserEntity;
+import com.planisjustnow.data.dto.*;
 import com.planisjustnow.service.TodolistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,11 +31,10 @@ public class TodoListController {
         }
         return null;
     }
-    @DeleteMapping("/delete/{userId}/{title}/{startDate}/{time}")
-    public ResponseEntity<ResponseDto> orderDeleteTodolist(@PathVariable String userId, @PathVariable String title, @PathVariable String startDate, @PathVariable String time) {
+    @PutMapping("delete")
+    public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodolistDeleteDto todolistDeleteDto) {
         ResponseDto responseDto;
-        String result = todolistService.deleteTodolist(userId,title,startDate,time);
-
+        String result = todolistService.deleteTodolist(todolistDeleteDto.getIdx());
         if (result.equals("success")) {
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
@@ -48,7 +44,20 @@ public class TodoListController {
         }
         return null;
     }
-    @PostMapping("/select")
+    @PostMapping("update")
+    public ResponseEntity<ResponseDto> orderUpdateTodolist(TodoListUpdateDto todoListUpdateDto){
+        ResponseDto responseDto;
+        String result = todolistService.updateTodolist(todoListUpdateDto);
+        if(result.equals("success")){
+            responseDto = new ResponseDto("success", ".", null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        } else if(result.equals("fail")){
+            responseDto = new ResponseDto("fail", ".", null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+        }
+        return null;
+    }
+    @PostMapping("select")
     public ResponseEntity<?> orderSelectTodolist(@RequestBody UserInfoDto userInfoDto) {
         Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
         if (tasks.isEmpty()) {
