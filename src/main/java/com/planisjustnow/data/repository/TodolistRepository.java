@@ -12,4 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 public interface TodolistRepository extends JpaRepository <TodolistEntity,Long> {
     List<TodolistEntity> findAllByUserIdEmail(String userId);
+
 }

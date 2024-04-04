@@ -3,9 +3,9 @@ package com.planisjustnow.data.dto;
 public class TodoListUpdateDto {
     Long idx;
     String title;
-    String date;
+    String startDate;
     String time;
-    String isImportant;
+    Integer isImportant;
 
     public Long getIdx() {
         return idx;
@@ -23,12 +23,12 @@ public class TodoListUpdateDto {
         this.title = title;
     }
 
-    public String getDate() {
-        return date;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public String getTime() {
@@ -39,11 +39,11 @@ public class TodoListUpdateDto {
         this.time = time;
     }
 
-    public String getIsImportant() {
+    public Integer getIsImportant() {
         return isImportant;
     }
 
-    public void setIsImportant(String isImportant) {
+    public void setIsImportant(Integer isImportant) {
         this.isImportant = isImportant;
     }
 }

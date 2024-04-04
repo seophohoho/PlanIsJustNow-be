@@ -43,8 +43,22 @@ public class TodolistService {
         }
     }
     public String updateTodolist(TodoListUpdateDto todoListUpdateDto){
-//        Optional<UserEntity> user = userRepository.findById(todoListUpdateDto.get);
-        return "";
+        Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(todoListUpdateDto.getIdx());
+
+        if(todolistEntityOptional.isPresent()){
+            TodolistEntity todolistEntity = todolistEntityOptional.get();
+
+            todolistEntity.setTitle(todoListUpdateDto.getTitle());
+            todolistEntity.setStartDate(todoListUpdateDto.getStartDate());
+            todolistEntity.setTime(todoListUpdateDto.getTime());
+            todolistEntity.setIsImportant(todoListUpdateDto.getIsImportant());
+
+            todolistRepository.save(todolistEntity);
+            return "success";
+        }
+        else{
+            return "fail";
+        }
     }
     public Map<String, List<Map<String, Object>>> selectTodolist(String userId) {
         Map<String, List<Map<String, Object>>> groupedTasks = new HashMap<>();

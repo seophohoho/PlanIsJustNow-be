@@ -45,7 +45,7 @@ public class TodoListController {
         return null;
     }
     @PostMapping("update")
-    public ResponseEntity<ResponseDto> orderUpdateTodolist(TodoListUpdateDto todoListUpdateDto){
+    public ResponseEntity<ResponseDto> orderUpdateTodolist(@RequestBody TodoListUpdateDto todoListUpdateDto){
         ResponseDto responseDto;
         String result = todolistService.updateTodolist(todoListUpdateDto);
         if(result.equals("success")){
