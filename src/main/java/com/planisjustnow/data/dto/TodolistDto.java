@@ -1,6 +1,6 @@
 package com.planisjustnow.data.dto;
 
-public class TodolistDeleteDto {
+public class TodolistDto {
     Long idx;
 
     public Long getIdx() {

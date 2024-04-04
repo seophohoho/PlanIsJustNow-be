@@ -2,6 +2,7 @@ package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.TodoListAddDto;
 import com.planisjustnow.data.dto.TodoListUpdateDto;
+import com.planisjustnow.data.dto.TodolistDto;
 import com.planisjustnow.data.entity.TodolistEntity;
 import com.planisjustnow.data.entity.UserEntity;
 import com.planisjustnow.data.repository.TodolistRepository;
@@ -42,7 +43,7 @@ public class TodolistService {
             return "fail";
         }
     }
-    public String updateTodolist(TodoListUpdateDto todoListUpdateDto){
+    public String modifyTodolist(TodoListUpdateDto todoListUpdateDto){
         Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(todoListUpdateDto.getIdx());
 
         if(todolistEntityOptional.isPresent()){
@@ -53,6 +54,19 @@ public class TodolistService {
             todolistEntity.setTime(todoListUpdateDto.getTime());
             todolistEntity.setIsImportant(todoListUpdateDto.getIsImportant());
 
+            todolistRepository.save(todolistEntity);
+            return "success";
+        }
+        else{
+            return "fail";
+        }
+    }
+    public String completeTodolist(Long idx){
+        Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(idx);
+        if(todolistEntityOptional.isPresent()){
+            TodolistEntity todolistEntity = todolistEntityOptional.get();
+
+            todolistEntity.setIsComplete(1);
             todolistRepository.save(todolistEntity);
             return "success";
         }

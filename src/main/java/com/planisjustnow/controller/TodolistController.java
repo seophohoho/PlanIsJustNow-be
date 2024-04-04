@@ -32,9 +32,9 @@ public class TodoListController {
         return null;
     }
     @PutMapping("delete")
-    public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodolistDeleteDto todolistDeleteDto) {
+    public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodolistDto todolistDto) {
         ResponseDto responseDto;
-        String result = todolistService.deleteTodolist(todolistDeleteDto.getIdx());
+        String result = todolistService.deleteTodolist(todolistDto.getIdx());
         if (result.equals("success")) {
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
@@ -44,14 +44,28 @@ public class TodoListController {
         }
         return null;
     }
-    @PostMapping("update")
-    public ResponseEntity<ResponseDto> orderUpdateTodolist(@RequestBody TodoListUpdateDto todoListUpdateDto){
+    @PostMapping("modify")
+    public ResponseEntity<ResponseDto> orderModifyTodolist(@RequestBody TodoListUpdateDto todoListUpdateDto){
         ResponseDto responseDto;
-        String result = todolistService.updateTodolist(todoListUpdateDto);
+        String result = todolistService.modifyTodolist(todoListUpdateDto);
         if(result.equals("success")){
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         } else if(result.equals("fail")){
+            responseDto = new ResponseDto("fail", ".", null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+        }
+        return null;
+    }
+    @PostMapping("complete")
+    public ResponseEntity<ResponseDto> orderCompleteTodolist(@RequestBody TodolistDto todolistDto){
+        ResponseDto responseDto;
+        String result = todolistService.completeTodolist(todolistDto.getIdx());
+        if(result.equals("success")){
+            responseDto = new ResponseDto("success",".",null);
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+        }
+        else if(result.equals("fail")){
             responseDto = new ResponseDto("fail", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
@@ -65,5 +79,4 @@ public class TodoListController {
         }
         return ResponseEntity.ok(new ResponseDto("success", ".", tasks));
     }
-
 }
