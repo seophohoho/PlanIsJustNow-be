@@ -5,23 +5,26 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "friend_list")
 public class FriendEntity {
+
     @Id
-    // 다대다?
+    @Column(name="idx")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idx;
+
+    @OneToMany
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private String from;
+    private UserEntity from;
 
-    // 다대다?
+    @OneToMany
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private String to;
+    private UserEntity to;
 
-    public String getFrom() { return from; }
-    public void setFrom(String from) { this.from = from; }
+    public Integer getIdx() { return idx; }
+    public void setIdx(Integer idx) { this.idx = idx; }
+    public UserEntity getFrom() { return from; }
 
-    public String getTo() { return to; }
-    public void setTo(String to) { this.to = to; }
+    public void setFrom(UserEntity from) { this.from = from; }
+    public UserEntity getTo() { return to; }
+    public void setTo(UserEntity to) { this.to = to; }
 
-    public FriendEntity(String from, String to) {
-        this.from = from;
-        this.to = to;
-    }
 }
