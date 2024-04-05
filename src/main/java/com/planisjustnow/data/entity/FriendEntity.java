@@ -19,12 +19,22 @@ public class FriendEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity to;
 
+    @Column(name = "is_friend")
+    private Integer is_friend;
+
     public Integer getIdx() { return idx; }
     public void setIdx(Integer idx) { this.idx = idx; }
     public UserEntity getFrom() { return from; }
+    public Integer getIs_friend() { return is_friend; }
 
     public void setFrom(UserEntity from) { this.from = from; }
     public UserEntity getTo() { return to; }
     public void setTo(UserEntity to) { this.to = to; }
+    public void setIs_friend(Integer is_friend) { this.is_friend = is_friend; }
 
+    public FriendEntity(UserEntity id, Integer is_friend) {
+        this.from = id;
+        this.to = id;
+        this.is_friend = is_friend;
+    }
 }
