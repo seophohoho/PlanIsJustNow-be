@@ -1,6 +1,6 @@
 package com.planisjustnow.data.dto;
 
-public class FriendRejectDto {
+public class FriendDto {
     String from;
     String to;
     Integer is_friend;
