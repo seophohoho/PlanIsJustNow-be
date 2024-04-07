@@ -1,5 +1,6 @@
 package com.planisjustnow.controller;
 
+import com.planisjustnow.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/friend")
 public class FriendController {
 
-    // @Autowired
+    @Autowired
+    private FriendService friendService;
 
     // 친구 요청
     //@PostMapping("friend-request");
