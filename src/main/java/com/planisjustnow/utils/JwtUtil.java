@@ -47,10 +47,10 @@ public class JwtUtil {
                 .orElse(null);
 
         if (token != null) {
-//            Key key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
+            byte[] key = jwtSecretKey.getBytes();
 
             // 새로운 API로 변경된 부분
-            JwtParser parser = Jwts.parserBuilder().setSigningKey(jwtSecretKey.getBytes()).build();
+            JwtParser parser = Jwts.parserBuilder().setSigningKey(key).build();
 
             Jws<Claims> claimsJws = parser.parseClaimsJws(token);
 
