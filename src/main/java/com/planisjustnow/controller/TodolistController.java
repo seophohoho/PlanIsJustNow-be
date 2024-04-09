@@ -2,6 +2,8 @@ package com.planisjustnow.controller;
 
 import com.planisjustnow.data.dto.*;
 import com.planisjustnow.service.TodolistService;
+import com.planisjustnow.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,12 @@ import java.util.Map;
 public class TodoListController {
     @Autowired
     private TodolistService todolistService;
+    @Autowired
+    private JwtUtil jwt;
     @PostMapping("add")
-    public ResponseEntity<ResponseDto> orderAddTodolist(@RequestBody TodoListAddDto todoListAddDto){
+    public ResponseEntity<ResponseDto> orderAddTodolist(@RequestBody TodoListAddDto todoListAddDto, HttpServletRequest httpServletRequest){
         ResponseDto responseDto;
+        jwt.parseToken(httpServletRequest);
         String result = todolistService.addTodolist(todoListAddDto);
         if(result.equals("success")){
             responseDto = new ResponseDto("success",".",null);

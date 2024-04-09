@@ -1,6 +1,6 @@
 package com.planisjustnow.data.dto;
 
-public class TodoListAddDto {
+public class  TodoListAddDto {
     String userId;
     String title;
     String startDate;

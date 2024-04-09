@@ -81,6 +81,7 @@ public class TodolistService {
         for (TodolistEntity task : tasks) {
             String startDate = task.getStartDate();
             Map<String, Object> taskDetails = new HashMap<>();
+            taskDetails.put("idx",task.getIdx());
             taskDetails.put("title", task.getTitle());
             taskDetails.put("time", task.getTime());
             taskDetails.put("isImportant", task.getIsImportant());

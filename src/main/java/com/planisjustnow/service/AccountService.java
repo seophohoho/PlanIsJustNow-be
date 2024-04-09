@@ -4,16 +4,25 @@ import com.planisjustnow.data.dto.AccountSignInDto;
 import com.planisjustnow.data.dto.AccountSignUpDto;
 import com.planisjustnow.data.entity.UserEntity;
 import com.planisjustnow.data.repository.AccountRepository;
+import com.planisjustnow.utils.JwtUtil;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.time.Duration;
+
 @Service
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private JwtUtil jwtUtil;
+
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public String signUp(AccountSignUpDto accountSignUpDto){
@@ -32,16 +41,18 @@ public class AccountService {
         }
         return "success";
     }
-    public String signIn(AccountSignInDto accountSignInDto){
+    public String signIn(AccountSignInDto accountSignInDto,HttpServletResponse response){
         try{
             UserEntity accountInfo = findAccountInfo(accountSignInDto.getEmail());
             if(passwordEncoder.matches(accountSignInDto.getPassword(),accountInfo.getPassword())){
+                jwtUtil.createToken(accountInfo.getEmail(),response);
                 return "success";
             }
             else{
                 return "false";
             }
-        } catch(NullPointerException e){
+        } catch(Exception e){
+            System.err.println(e);
             return "false";
         }
     }
