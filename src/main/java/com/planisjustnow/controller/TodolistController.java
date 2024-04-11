@@ -28,10 +28,9 @@ public class TodoListController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "/");
+            responseDto = new ResponseDto("redirect", "/", null);
             System.out.println("토큰을 발급받아라.");
-            return new ResponseEntity<>(headers, HttpStatus.OK); // HTTP 상태 코드 302
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         String result = todolistService.addTodolist(userId,todoListAddDto);
         if(result.equals("success")){
@@ -48,7 +47,12 @@ public class TodoListController {
     public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodolistDto todolistDto,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
-        String result = todolistService.deleteTodolist(todolistDto.getIdx());
+        if(userId.equals("fail:Token-not-found")){
+            responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
+        String result = todolistService.deleteTodolist(userId,todolistDto.getIdx());
         if (result.equals("success")) {
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
@@ -59,9 +63,15 @@ public class TodoListController {
         return null;
     }
     @PostMapping("modify")
-    public ResponseEntity<ResponseDto> orderModifyTodolist(@RequestBody TodoListUpdateDto todoListUpdateDto){
+    public ResponseEntity<ResponseDto> orderModifyTodolist(@RequestBody TodoListUpdateDto todoListUpdateDto,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         ResponseDto responseDto;
-        String result = todolistService.modifyTodolist(todoListUpdateDto);
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
+        String result = todolistService.modifyTodolist(userId,todoListUpdateDto);
         if(result.equals("success")){
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
@@ -72,9 +82,15 @@ public class TodoListController {
         return null;
     }
     @PostMapping("complete")
-    public ResponseEntity<ResponseDto> orderCompleteTodolist(@RequestBody TodolistDto todolistDto){
+    public ResponseEntity<ResponseDto> orderCompleteTodolist(@RequestBody TodolistDto todolistDto,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         ResponseDto responseDto;
-        String result = todolistService.completeTodolist(todolistDto.getIdx());
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
+        String result = todolistService.completeTodolist(userId,todolistDto.getIdx());
         if(result.equals("success")){
             responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
@@ -85,9 +101,16 @@ public class TodoListController {
         }
         return null;
     }
-    @PostMapping("select")
-    public ResponseEntity<?> orderSelectTodolist(@RequestBody UserInfoDto userInfoDto) {
-        Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
+    @GetMapping("select")
+    public ResponseEntity<?> orderSelectTodolist(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) {
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
+        Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userId);
         if (tasks.isEmpty()) {
             return ResponseEntity.ok(new ResponseDto("success", "empty", new ArrayList<>()));
         }

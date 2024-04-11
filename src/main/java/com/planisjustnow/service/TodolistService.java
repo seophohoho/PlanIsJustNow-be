@@ -26,70 +26,84 @@ public class TodolistService {
 
     @Transactional
     public String addTodolist(String userId,TodoListAddDto todoListAddDto){
-        Optional<UserEntity> user = userRepository.findById(userId); // UserEntity 조회
-        if(user.isPresent()){
-            TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListAddDto.getTitle(), todoListAddDto.getStartDate(), todoListAddDto.getTime(), todoListAddDto.getIsImportant(), 0);
-            todolistRepository.save(todolistEntity);
-            return "success";
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId); // UserEntity 조회
+            if(user.isPresent()){
+                TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListAddDto.getTitle(), todoListAddDto.getStartDate(), todoListAddDto.getTime(), todoListAddDto.getIsImportant(), 0);
+                todolistRepository.save(todolistEntity);
+                return "success";
+            }
         }
-        return "fail";
+        catch(NullPointerException e){
+            return "fail";
+        }
+        return null;
     }
-    public String deleteTodolist(Long idx){
+    public String deleteTodolist(String userId,Long idx){
         try {
-            todolistRepository.deleteById(idx);
+            Optional<UserEntity> user = userRepository.findById(userId);
+            todolistRepository.deleteByUserIdAndIdx(user.get(),idx);
             return "success";
         }
         catch (NullPointerException e){
             return "fail";
         }
     }
-    public String modifyTodolist(TodoListUpdateDto todoListUpdateDto){
-        Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(todoListUpdateDto.getIdx());
+    public String modifyTodolist(String userId,TodoListUpdateDto todoListUpdateDto){
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId);
+            Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(todoListUpdateDto.getIdx());
+            if(todolistEntityOptional.isPresent()){
+                TodolistEntity todolistEntity = todolistEntityOptional.get();
+                todolistEntity.setUserId(user.get());
+                todolistEntity.setTitle(todoListUpdateDto.getTitle());
+                todolistEntity.setStartDate(todoListUpdateDto.getStartDate());
+                todolistEntity.setTime(todoListUpdateDto.getTime());
+                todolistEntity.setIsImportant(todoListUpdateDto.getIsImportant());
 
-        if(todolistEntityOptional.isPresent()){
-            TodolistEntity todolistEntity = todolistEntityOptional.get();
-
-            todolistEntity.setTitle(todoListUpdateDto.getTitle());
-            todolistEntity.setStartDate(todoListUpdateDto.getStartDate());
-            todolistEntity.setTime(todoListUpdateDto.getTime());
-            todolistEntity.setIsImportant(todoListUpdateDto.getIsImportant());
-
-            todolistRepository.save(todolistEntity);
-            return "success";
-        }
-        else{
+                todolistRepository.save(todolistEntity);
+                return "success";
+            }
+        }catch (NullPointerException e){
             return "fail";
         }
+        return null;
     }
-    public String completeTodolist(Long idx){
-        Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(idx);
-        if(todolistEntityOptional.isPresent()){
-            TodolistEntity todolistEntity = todolistEntityOptional.get();
-
-            todolistEntity.setIsComplete(1);
-            todolistRepository.save(todolistEntity);
-            return "success";
-        }
-        else{
+    public String completeTodolist(String userId, Long idx){
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId);
+            Optional<TodolistEntity> todolistEntityOptional = todolistRepository.findById(idx);
+            if(todolistEntityOptional.isPresent()){
+                TodolistEntity todolistEntity = todolistEntityOptional.get();
+                todolistEntity.setUserId(user.get());
+                todolistEntity.setIsComplete(1);
+                todolistRepository.save(todolistEntity);
+                return "success";
+            }
+        }catch (NullPointerException e){
             return "fail";
         }
+        return null;
     }
     public Map<String, List<Map<String, Object>>> selectTodolist(String userId) {
-        Map<String, List<Map<String, Object>>> groupedTasks = new HashMap<>();
-        List<TodolistEntity> tasks = todolistRepository.findAllByUserIdEmail(userId);
+        try{
+            Map<String, List<Map<String, Object>>> groupedTasks = new HashMap<>();
+            List<TodolistEntity> tasks = todolistRepository.findAllByUserIdEmail(userId);
 
-        for (TodolistEntity task : tasks) {
-            String startDate = task.getStartDate();
-            Map<String, Object> taskDetails = new HashMap<>();
-            taskDetails.put("idx",task.getIdx());
-            taskDetails.put("title", task.getTitle());
-            taskDetails.put("time", task.getTime());
-            taskDetails.put("isImportant", task.getIsImportant());
-            taskDetails.put("isComplete", task.getIsComplete());
+            for (TodolistEntity task : tasks) {
+                String startDate = task.getStartDate();
+                Map<String, Object> taskDetails = new HashMap<>();
+                taskDetails.put("idx",task.getIdx());
+                taskDetails.put("title", task.getTitle());
+                taskDetails.put("time", task.getTime());
+                taskDetails.put("isImportant", task.getIsImportant());
+                taskDetails.put("isComplete", task.getIsComplete());
 
-            groupedTasks.computeIfAbsent(startDate, k -> new ArrayList<>()).add(taskDetails);
+                groupedTasks.computeIfAbsent(startDate, k -> new ArrayList<>()).add(taskDetails);
+            }
+            return groupedTasks;
+        }catch (NullPointerException e){
+            return null;
         }
-
-        return groupedTasks;
     }
 }

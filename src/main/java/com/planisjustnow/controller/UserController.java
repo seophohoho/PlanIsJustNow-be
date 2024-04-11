@@ -9,6 +9,7 @@ import com.planisjustnow.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,11 @@ public class UserController {
     @PostMapping("choice-pet")
     public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
         String result = userPetService.setUserPet(userId,choicePetDto);
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null);
@@ -43,6 +49,11 @@ public class UserController {
     @GetMapping("has-pet")
     public ResponseEntity<ResponseDto> orderIsHasPet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse){
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
         Map<String,Object> result = userPetService.isHasPet(userId);
         if(result.get("result").equals("success:has")){
             ResponseDto responseDto = new ResponseDto("success","has",result.get("userPetList"));
