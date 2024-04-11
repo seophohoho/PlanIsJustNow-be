@@ -25,8 +25,8 @@ public class TodolistService {
     }
 
     @Transactional
-    public String addTodolist(TodoListAddDto todoListAddDto){
-        Optional<UserEntity> user = userRepository.findById(todoListAddDto.getUserId()); // UserEntity 조회
+    public String addTodolist(String userId,TodoListAddDto todoListAddDto){
+        Optional<UserEntity> user = userRepository.findById(userId); // UserEntity 조회
         if(user.isPresent()){
             TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListAddDto.getTitle(), todoListAddDto.getStartDate(), todoListAddDto.getTime(), todoListAddDto.getIsImportant(), 0);
             todolistRepository.save(todolistEntity);

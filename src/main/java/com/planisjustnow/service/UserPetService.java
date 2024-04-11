@@ -10,6 +10,9 @@ import com.planisjustnow.data.repository.NatureRepository;
 import com.planisjustnow.data.repository.PetRepository;
 import com.planisjustnow.data.repository.UserPetRepository;
 import com.planisjustnow.data.repository.UserRepository;
+import com.planisjustnow.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +36,14 @@ public class UserPetService {
     private UserRepository userRepository;
     @Autowired
     private PetRepository petRepository;
+    @Autowired
+    private JwtUtil jwtUtil;
     @Transactional
-    public String setUserPet(ChoicePetDto choicePetDto){
+    public String setUserPet(String userId, ChoicePetDto choicePetDto){
         Integer natureId = getRandomNature();
         int maxFriendship = getRandomMaxFriendship();
 
-        UserEntity entity1 = userRepository.findByEmail(choicePetDto.getEmail());
+        UserEntity entity1 = userRepository.findByEmail(userId);
         PetEntity entity2 = petRepository.findByPetId(choicePetDto.getSpecies());
         NatureEntity entity3 = natureRepository.findByNatureId(natureId);
         UserPetEntity userPetEntity = new UserPetEntity();
@@ -66,10 +71,10 @@ public class UserPetService {
         return random.nextInt(maxFriendShip) + minFriendship;
     }
     @Transactional
-    public Map<String, Object> isHasPet(UserInfoDto userInfoDto){
+    public Map<String, Object> isHasPet(String userId){
         Map<String, Object> resultMap = new HashMap<>();
         try {
-            List<UserPetEntity> userPetList = findUserPetInfo(userInfoDto.getEmail());
+            List<UserPetEntity> userPetList = findUserPetInfo(userId);
             System.out.println(userPetList);
             if(userPetList.size() > 0){
                 resultMap.put("result", "success:has");

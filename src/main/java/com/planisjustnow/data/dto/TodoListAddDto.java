@@ -1,19 +1,10 @@
 package com.planisjustnow.data.dto;
 
 public class  TodoListAddDto {
-    String userId;
     String title;
     String startDate;
     String time;
     Integer isImportant;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

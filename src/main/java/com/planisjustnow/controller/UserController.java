@@ -5,6 +5,9 @@ import com.planisjustnow.data.dto.ChoicePetDto;
 import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.data.dto.UserInfoDto;
 import com.planisjustnow.service.UserPetService;
+import com.planisjustnow.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +25,12 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserPetService userPetService;
+    @Autowired
+    private JwtUtil jwtUtil;
     @PostMapping("choice-pet")
-    public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto){
-        String result = userPetService.setUserPet(choicePetDto);
+    public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        String result = userPetService.setUserPet(userId,choicePetDto);
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
@@ -34,9 +40,10 @@ public class UserController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("has-pet")
-    public ResponseEntity<ResponseDto> orderIsHasPet(@RequestBody UserInfoDto userInfoDto){
-        Map<String,Object> result = userPetService.isHasPet(userInfoDto);
+    @GetMapping("has-pet")
+    public ResponseEntity<ResponseDto> orderIsHasPet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse){
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        Map<String,Object> result = userPetService.isHasPet(userId);
         if(result.get("result").equals("success:has")){
             ResponseDto responseDto = new ResponseDto("success","has",result.get("userPetList"));
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);

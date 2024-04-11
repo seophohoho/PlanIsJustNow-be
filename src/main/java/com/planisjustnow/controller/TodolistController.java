@@ -4,7 +4,9 @@ import com.planisjustnow.data.dto.*;
 import com.planisjustnow.service.TodolistService;
 import com.planisjustnow.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,15 +22,21 @@ public class TodoListController {
     @Autowired
     private TodolistService todolistService;
     @Autowired
-    private JwtUtil jwt;
+    private JwtUtil jwtUtil;
     @PostMapping("add")
-    public ResponseEntity<ResponseDto> orderAddTodolist(@RequestBody TodoListAddDto todoListAddDto, HttpServletRequest httpServletRequest){
+    public ResponseEntity<ResponseDto> orderAddTodolist(@RequestBody TodoListAddDto todoListAddDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         ResponseDto responseDto;
-        jwt.parseToken(httpServletRequest);
-        String result = todolistService.addTodolist(todoListAddDto);
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/");
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<>(headers, HttpStatus.OK); // HTTP 상태 코드 302
+        }
+        String result = todolistService.addTodolist(userId,todoListAddDto);
         if(result.equals("success")){
             responseDto = new ResponseDto("success",".",null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.FOUND);
         }
         else if(result.equals("fail")){
             responseDto = new ResponseDto("fail",".",null);
@@ -37,8 +45,9 @@ public class TodoListController {
         return null;
     }
     @PutMapping("delete")
-    public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodolistDto todolistDto) {
+    public ResponseEntity<ResponseDto> orderDeleteTodolist(@RequestBody TodolistDto todolistDto,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         String result = todolistService.deleteTodolist(todolistDto.getIdx());
         if (result.equals("success")) {
             responseDto = new ResponseDto("success", ".", null);

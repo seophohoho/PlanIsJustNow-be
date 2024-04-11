@@ -3,17 +3,8 @@ package com.planisjustnow.data.dto;
 import com.planisjustnow.data.entity.PetEntity;
 
 public class ChoicePetDto {
-    String email;
     Integer species;
     String nickname;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public Integer getSpecies() {
         return species;

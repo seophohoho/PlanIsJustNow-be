@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
-
 @Component
 public class JwtUtil {
     private String jwtSecretKey;
@@ -31,35 +30,45 @@ public class JwtUtil {
                 .setExpiration(new Date(new Date().getTime() + jwtExpiry))
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey.getBytes())
                 .compact();
-
+        String cookieValue = "token=" + token + "; Path=/; HttpOnly; SameSite=None; Secure";
         Cookie cookie = new Cookie("token",token);
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
-        httpServletResponse.addCookie(cookie);
+//        httpServletResponse.addCookie(cookie);
+        httpServletResponse.addHeader("Set-Cookie",cookieValue);
     }
 
-    public void parseToken(HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        String token = Arrays.stream(cookies)
-                .filter(c -> "token".equals(c.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
+    public String parseToken(HttpServletRequest request, HttpServletResponse httpServletResponse){
+        try{
+            Cookie[] cookies = request.getCookies();
+            String token = Arrays.stream(cookies)
+                    .filter(c -> "token".equals(c.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
 
-        if (token != null) {
-            byte[] key = jwtSecretKey.getBytes();
+            if (token != null) {
+                byte[] key = jwtSecretKey.getBytes();
 
-            // 새로운 API로 변경된 부분
-            JwtParser parser = Jwts.parserBuilder().setSigningKey(key).build();
+                // 새로운 API로 변경된 부분
+                JwtParser parser = Jwts.parserBuilder().setSigningKey(key).build();
 
-            Jws<Claims> claimsJws = parser.parseClaimsJws(token);
+                Jws<Claims> claimsJws = parser.parseClaimsJws(token);
 
-            Claims claims = claimsJws.getBody();
-            String userId = claims.getSubject();
-            System.out.println(userId);
-        } else {
-            System.out.println("Token not found in cookies");
+                String userId = claimsJws.getBody().getSubject();
+                System.out.println(userId);
+                return userId;
+            }
+        }catch (ExpiredJwtException e){
+            String userId = e.getClaims().getSubject();
+            createToken(userId,httpServletResponse);
+            System.out.println("토큰 유효 기간 지남. 새로 발급함.");
+            return userId;
+        }catch (NullPointerException e){
+            return "fail:Token-not-found";
         }
+        return null;
     }
     public static String generateHS256SecretKey(int keyLength) {
         SecureRandom secureRandom = new SecureRandom();

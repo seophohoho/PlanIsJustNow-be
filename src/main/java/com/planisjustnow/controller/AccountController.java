@@ -4,6 +4,7 @@ import com.planisjustnow.data.dto.AccountSignInDto;
 import com.planisjustnow.data.dto.AccountSignUpDto;
 import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.service.AccountService;
+import com.planisjustnow.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private JwtUtil jwtUtil;
     @PostMapping("signup")
     public ResponseEntity<ResponseDto> orderSignUp(@RequestBody AccountSignUpDto accountSignUpDto){
         String result = accountService.signUp(accountSignUpDto);
@@ -39,6 +42,7 @@ public class AccountController {
         String result = accountService.signIn(accountSignInDto,httpServletResponse);
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null);
+            jwtUtil.createToken(accountSignInDto.getEmail(),httpServletResponse);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("not matche")){
