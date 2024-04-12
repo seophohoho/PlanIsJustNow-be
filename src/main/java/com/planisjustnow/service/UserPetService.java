@@ -66,7 +66,7 @@ public class UserPetService {
         return random.nextInt(maxFriendShip) + minFriendship;
     }
     @Transactional
-    public Map<String, Object> isHasPet(UserInfoDto userInfoDto){
+    public Map<String, Object> isHasPet(String userId){
         Map<String, Object> resultMap = new HashMap<>();
         try {
             List<UserPetEntity> userPetList = findUserPetInfo(userInfoDto.getEmail());

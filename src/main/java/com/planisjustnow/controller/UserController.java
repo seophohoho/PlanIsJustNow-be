@@ -34,9 +34,15 @@ public class UserController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("has-pet")
-    public ResponseEntity<ResponseDto> orderIsHasPet(@RequestBody UserInfoDto userInfoDto){
-        Map<String,Object> result = userPetService.isHasPet(userInfoDto);
+    @GetMapping("has-pet")
+    public ResponseEntity<ResponseDto> orderIsHasPet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse){
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
+        Map<String,Object> result = userPetService.isHasPet(userId);
         if(result.get("result").equals("success:has")){
             ResponseDto responseDto = new ResponseDto("success","has",result.get("userPetList"));
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);

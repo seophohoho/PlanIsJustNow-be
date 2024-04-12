@@ -38,6 +38,7 @@ public class AccountController {
         String result = accountService.signIn(accountSignInDto);
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null);
+            jwtUtil.createToken(accountSignInDto.getEmail(),httpServletResponse);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("not matche")){
