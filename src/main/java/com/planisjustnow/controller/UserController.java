@@ -5,7 +5,11 @@ import com.planisjustnow.data.dto.ChoicePetDto;
 import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.data.dto.UserInfoDto;
 import com.planisjustnow.service.UserPetService;
+import com.planisjustnow.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,9 +26,17 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserPetService userPetService;
+    @Autowired
+    private JwtUtil jwtUtil;
     @PostMapping("choice-pet")
-    public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto){
-        String result = userPetService.setUserPet(choicePetDto);
+    public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        if(userId.equals("fail:Token-not-found")){
+            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            System.out.println("토큰을 발급받아라.");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+        }
+        String result = userPetService.setUserPet(userId,choicePetDto);
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
