@@ -22,6 +22,10 @@ public class FriendEntity {
     @Column(name = "is_friend")
     private Integer is_friend;
 
+    public FriendEntity() {
+
+    }
+
     public Integer getIdx() { return idx; }
     public void setIdx(Integer idx) { this.idx = idx; }
     public UserEntity getFrom() { return from; }
