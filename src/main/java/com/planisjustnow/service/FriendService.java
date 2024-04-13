@@ -25,21 +25,27 @@ public class FriendService {
         String toUser = friendDto.getTo();
 
         // 요청 정보를 기반으로 새로운 친구 요청 Entity 생성하기
-        // (from - to - isFriend)
-        FriendEntity friendRequest1 = new FriendEntity();
-        friendRequest1.setFrom(userRepository.findById(fromUser).orElse(null));
-        friendRequest1.setTo(userRepository.findById(toUser).orElse(null));
-        friendRequest1.setIs_friend(0);
-        // (from - to - isFriend)
-        FriendEntity friendRequest2 = new FriendEntity();
-        friendRequest2.setTo(userRepository.findById(fromUser).orElse(null));
-        friendRequest2.setFrom(userRepository.findById(toUser).orElse(null));
-        friendRequest2.setIs_friend(0);
 
-        // 데이터베이스에 Entity 저장
-        friendRepository.saveAll(Arrays.asList(friendRequest1, friendRequest2));
+        try{
+            // (from - to - isFriend)
+            FriendEntity friendRequest1 = new FriendEntity();
+            friendRequest1.setFrom(userRepository.findById(fromUser).orElse(null));
+            friendRequest1.setTo(userRepository.findById(toUser).orElse(null));
+            friendRequest1.setIs_friend(0);
+            // (from - to - isFriend)
+            FriendEntity friendRequest2 = new FriendEntity();
+            friendRequest2.setTo(userRepository.findById(fromUser).orElse(null));
+            friendRequest2.setFrom(userRepository.findById(toUser).orElse(null));
+            friendRequest2.setIs_friend(0);
 
-        return "친구 요청이 완료되었습니다.";
+            // 데이터베이스에 Entity 저장
+            friendRepository.saveAll(Arrays.asList(friendRequest1, friendRequest2));
+
+            return "친구 요청이 완료되었습니다.";
+        } catch (Exception e) {
+            return "친구 요청에 실패하였습니다.";
+        }
+
     }
 
 }
