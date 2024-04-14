@@ -3,7 +3,7 @@ package com.planisjustnow.data.dto;
 public class FriendDto {
     String from;
     String to;
-    Integer is_friend;
+    Integer is_friend = 0;
 
     public String getFrom() { return from; }
     public String getTo() { return to; }
