@@ -19,38 +19,34 @@ public class FriendService {
     private FriendRepository friendRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Transactional
     public String friendRequest(FriendDto friendDto) {
 
         // 클라이언트로부터 받은 FriendDto에서 요청 정보 추가하기
-        String fromUser = friendDto.getFrom();
-        String toUser = friendDto.getTo();
 
         // 요청 정보를 기반으로 새로운 친구 요청 Entity 생성하기
 
         try{
+            String fromUser = friendDto.getFrom();
+            String toUser = friendDto.getTo();
             Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
             Optional<UserEntity> toUserEntity = userRepository.findById(toUser);
 
-            // (from - to - isFriend)
             FriendEntity friendRequest1 = new FriendEntity();
-            friendRequest1.setFrom(fromUserEntity);
-            friendRequest1.setTo(toUserEntity);
-            friendRequest1.setIs_friend(friendDto.getIs_friend());
-            // (from - to - isFriend)
+            friendRequest1.setFrom(fromUserEntity.get());
+            friendRequest1.setTo(toUserEntity.get());
+            friendRequest1.setIs_friend(0);
+            friendRepository.save(friendRequest1);
+
             FriendEntity friendRequest2 = new FriendEntity();
-            friendRequest2.setFrom(toUserEntity);
-            friendRequest2.setTo(fromUserEntity);
-            friendRequest2.setIs_friend(friendDto.getIs_friend());
-
-            // 데이터베이스에 Entity 저장
-            friendRepository.saveAll(Arrays.asList(friendRequest1, friendRequest2));
-
+            friendRequest2.setFrom(toUserEntity.get());
+            friendRequest2.setTo(fromUserEntity.get());
+            friendRequest2.setIs_friend(0);
+            friendRepository.save(friendRequest2);
             return "success";
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             return "fail";
         }
-
     }
 
 }
