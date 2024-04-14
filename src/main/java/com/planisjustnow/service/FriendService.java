@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class FriendService {
@@ -19,7 +20,6 @@ public class FriendService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
     public String friendRequest(FriendDto friendDto) {
 
         // 클라이언트로부터 받은 FriendDto에서 요청 정보 추가하기
@@ -29,15 +29,18 @@ public class FriendService {
         // 요청 정보를 기반으로 새로운 친구 요청 Entity 생성하기
 
         try{
+            Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
+            Optional<UserEntity> toUserEntity = userRepository.findById(toUser);
+
             // (from - to - isFriend)
             FriendEntity friendRequest1 = new FriendEntity();
-            friendRequest1.setFrom(userRepository.findByEmail(fromUser));
-            friendRequest1.setTo(userRepository.findByEmail(toUser));
+            friendRequest1.setFrom(fromUserEntity);
+            friendRequest1.setTo(toUserEntity);
             friendRequest1.setIs_friend(friendDto.getIs_friend());
             // (from - to - isFriend)
             FriendEntity friendRequest2 = new FriendEntity();
-            friendRequest2.setFrom(userRepository.findByEmail(toUser));
-            friendRequest2.setTo(userRepository.findByEmail(fromUser));
+            friendRequest2.setFrom(toUserEntity);
+            friendRequest2.setTo(fromUserEntity);
             friendRequest2.setIs_friend(friendDto.getIs_friend());
 
             // 데이터베이스에 Entity 저장
