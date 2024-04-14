@@ -12,11 +12,11 @@ public class FriendEntity {
     private Integer idx;
 
     @ManyToOne
-    @JoinColumn(name = "from_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "from", referencedColumnName = "id")
     private UserEntity from;
 
     @ManyToOne
-    @JoinColumn(name = "to_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "to", referencedColumnName = "id")
     private UserEntity to;
 
     @Column(name = "is_friend")
