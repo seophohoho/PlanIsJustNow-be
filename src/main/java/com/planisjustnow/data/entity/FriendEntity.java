@@ -11,12 +11,12 @@ public class FriendEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @OneToMany
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "from_user_id", referencedColumnName = "id")
     private UserEntity from;
 
-    @OneToMany
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "to_user_id", referencedColumnName = "id")
     private UserEntity to;
 
     @Column(name = "is_friend")
