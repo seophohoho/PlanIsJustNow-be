@@ -43,9 +43,9 @@ public class FriendService {
             // 데이터베이스에 Entity 저장
             friendRepository.saveAll(Arrays.asList(friendRequest1, friendRequest2));
 
-            return "친구 요청이 완료되었습니다.";
+            return "success";
         } catch (Exception e) {
-            return "친구 요청에 실패하였습니다.";
+            return "fail";
         }
 
     }
