@@ -7,9 +7,11 @@ import com.planisjustnow.data.repository.FriendRepository;
 import com.planisjustnow.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
+@Service
 public class FriendService {
 
     @Autowired
