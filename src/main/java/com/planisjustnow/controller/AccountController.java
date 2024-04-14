@@ -46,7 +46,7 @@ public class AccountController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("not matche")){
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Not matched error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
         else{

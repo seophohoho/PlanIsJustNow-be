@@ -96,8 +96,8 @@ public class TodolistService {
                 taskDetails.put("idx",task.getIdx());
                 taskDetails.put("title", task.getTitle());
                 taskDetails.put("time", task.getTime());
-                taskDetails.put("isImportant", task.getIsImportant());
-                taskDetails.put("isComplete", task.getIsComplete());
+                taskDetails.put("important", task.getIsImportant());
+                taskDetails.put("complete", task.getIsComplete());
 
                 groupedTasks.computeIfAbsent(startDate, k -> new ArrayList<>()).add(taskDetails);
             }

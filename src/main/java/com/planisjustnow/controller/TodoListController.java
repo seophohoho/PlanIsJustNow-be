@@ -35,10 +35,10 @@ public class TodoListController {
         String result = todolistService.addTodolist(userId,todoListAddDto);
         if(result.equals("success")){
             responseDto = new ResponseDto("success",".",null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.FOUND);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("fail")){
-            responseDto = new ResponseDto("fail",".",null);
+            responseDto = new ResponseDto("fail","Unexpected error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -57,7 +57,7 @@ public class TodoListController {
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         } else if (result.equals("fail")) {
-            responseDto = new ResponseDto("fail", ".", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -76,7 +76,7 @@ public class TodoListController {
             responseDto = new ResponseDto("success", ".", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         } else if(result.equals("fail")){
-            responseDto = new ResponseDto("fail", ".", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -96,7 +96,7 @@ public class TodoListController {
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
         else if(result.equals("fail")){
-            responseDto = new ResponseDto("fail", ".", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -112,8 +112,16 @@ public class TodoListController {
         }
         Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userId);
         if (tasks.isEmpty()) {
-            return ResponseEntity.ok(new ResponseDto("success", "empty", new ArrayList<>()));
+            responseDto = new ResponseDto("success","empty",new ArrayList<>());
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
-        return ResponseEntity.ok(new ResponseDto("success", ".", tasks));
+        else if(tasks == null){
+            responseDto = new ResponseDto("fail", "Unexpected error", null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+        }
+        else{
+            responseDto = new ResponseDto("success", ".", tasks);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        }
     }
 }

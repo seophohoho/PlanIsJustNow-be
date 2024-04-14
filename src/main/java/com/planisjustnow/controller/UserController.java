@@ -34,7 +34,7 @@ public class UserController {
         if(userId.equals("fail:Token-not-found")){
             ResponseDto responseDto = new ResponseDto("redirect", "/", null);
             System.out.println("토큰을 발급받아라.");
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
         String result = userPetService.setUserPet(userId,choicePetDto);
         if(result.equals("success")){
