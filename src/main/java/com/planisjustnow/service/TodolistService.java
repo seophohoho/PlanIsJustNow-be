@@ -25,19 +25,23 @@ public class TodolistService {
     }
 
     @Transactional
-    public String addTodolist(String userId,TodoListAddDto todoListAddDto){
+    public Map<String,Object> addTodolist(String userId,TodoListAddDto todoListAddDto){
+        Map<String,Object> resultMap = new HashMap<>();
         try{
             Optional<UserEntity> user = userRepository.findById(userId); // UserEntity 조회
             if(user.isPresent()){
                 TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListAddDto.getTitle(), todoListAddDto.getStartDate(), todoListAddDto.getTime(), todoListAddDto.getIsImportant(), 0);
-                todolistRepository.save(todolistEntity);
-                return "success";
+                TodolistEntity savedEntity = todolistRepository.save(todolistEntity);
+                Long savedIdx = savedEntity.getIdx();
+                resultMap.put("result","success");
+                resultMap.put("data",savedIdx);
             }
         }
         catch(NullPointerException e){
-            return "fail";
+            resultMap.put("result","fail");
+            resultMap.put("data",null);
         }
-        return null;
+        return resultMap;
     }
     public String deleteTodolist(String userId,Long idx){
         try {

@@ -32,12 +32,12 @@ public class TodoListController {
             System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
-        String result = todolistService.addTodolist(userId,todoListAddDto);
-        if(result.equals("success")){
-            responseDto = new ResponseDto("success",".",null);
+        Map<String,Object> result = todolistService.addTodolist(userId,todoListAddDto);
+        if(result.get("result").equals("success")){
+            responseDto = new ResponseDto("success",".",result.get("data"));
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
-        else if(result.equals("fail")){
+        else if(result.get("result").equals("fail")){
             responseDto = new ResponseDto("fail","Unexpected error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
