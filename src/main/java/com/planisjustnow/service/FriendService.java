@@ -31,14 +31,14 @@ public class FriendService {
         try{
             // (from - to - isFriend)
             FriendEntity friendRequest1 = new FriendEntity();
-            friendRequest1.setFrom(userRepository.findById(fromUser).orElse(null));
-            friendRequest1.setTo(userRepository.findById(toUser).orElse(null));
-            friendRequest1.setIs_friend(0);
+            friendRequest1.setFrom(userRepository.findByEmail(fromUser));
+            friendRequest1.setTo(userRepository.findByEmail(toUser));
+            friendRequest1.setIs_friend(friendDto.getIs_friend());
             // (from - to - isFriend)
             FriendEntity friendRequest2 = new FriendEntity();
-            friendRequest2.setTo(userRepository.findById(fromUser).orElse(null));
-            friendRequest2.setFrom(userRepository.findById(toUser).orElse(null));
-            friendRequest2.setIs_friend(0);
+            friendRequest2.setFrom(userRepository.findByEmail(toUser));
+            friendRequest2.setTo(userRepository.findByEmail(fromUser));
+            friendRequest2.setIs_friend(friendDto.getIs_friend());
 
             // 데이터베이스에 Entity 저장
             friendRepository.saveAll(Arrays.asList(friendRequest1, friendRequest2));
