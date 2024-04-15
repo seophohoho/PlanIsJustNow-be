@@ -25,12 +25,12 @@ public class FriendController {
         if (result.equals("success")) {
             ResponseDto responseDto = new ResponseDto("success", ".");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
-        } else if (result.equals("fail")) {
-            ResponseDto responseDto = new ResponseDto("fail", "friendRequest fail");
+        } else if (result.equals("already exist")) {
+            ResponseDto responseDto = new ResponseDto("already exist", "friendRequest is already exist");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         } else {
             ResponseDto responseDto = new ResponseDto("fail", "Unexpected error");
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
 

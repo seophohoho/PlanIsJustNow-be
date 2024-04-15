@@ -31,19 +31,26 @@ public class FriendService {
             Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
             Optional<UserEntity> toUserEntity = userRepository.findById(toUser);
 
-            // 요청 정보를 기반으로 새로운 친구 요청 Entity 생성하기 (from-to)
-            FriendEntity friendRequest1 = new FriendEntity();
-            friendRequest1.setFrom(fromUserEntity.get());
-            friendRequest1.setTo(toUserEntity.get());
-            friendRequest1.setIs_friend(0);
-            friendRepository.save(friendRequest1);
-            // 요청 정보를 기반으로 새로운 친구 요청 Entity 생성하기 (to-from)
-            FriendEntity friendRequest2 = new FriendEntity();
-            friendRequest2.setFrom(toUserEntity.get());
-            friendRequest2.setTo(fromUserEntity.get());
-            friendRequest2.setIs_friend(0);
-            friendRepository.save(friendRequest2);
-            return "success";
+            // 친구 요청이 이미 존재할 경우, 오류 반환
+            List<FriendEntity> existingRequests = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
+            if (!existingRequests.isEmpty()) {
+                return "already exist";
+            } else {
+                // 친구 요청이 존재하지 않을 경우, 요청 정보를 기반으로 새로운 친구 요청 Entity 생성하기
+                // from-to
+                FriendEntity friendRequest1 = new FriendEntity();
+                friendRequest1.setFrom(fromUserEntity.get());
+                friendRequest1.setTo(toUserEntity.get());
+                friendRequest1.setIs_friend(0);
+                friendRepository.save(friendRequest1);
+                // to-from
+                FriendEntity friendRequest2 = new FriendEntity();
+                friendRequest2.setFrom(toUserEntity.get());
+                friendRequest2.setTo(fromUserEntity.get());
+                friendRequest2.setIs_friend(0);
+                friendRepository.save(friendRequest2);
+                return "success";
+            }
 
         } catch (NullPointerException e) {
             return "fail";
