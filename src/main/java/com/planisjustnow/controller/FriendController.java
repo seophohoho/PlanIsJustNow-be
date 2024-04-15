@@ -50,7 +50,7 @@ public class FriendController {
     // 친구 거절
     @PostMapping("requestRefuse")
     public ResponseEntity<ResponseDto> refuseFriendRequest(@RequestBody FriendDto friendDto) {
-        String result = friendService.requestAccept(friendDto);
+        String result = friendService.requestRefuse(friendDto);
         if (result.equals("success")) {
             ResponseDto responseDto = new ResponseDto("success", ".");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);

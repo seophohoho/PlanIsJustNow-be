@@ -103,16 +103,16 @@ public class FriendService {
             }
 
             // 친구 요청목록 조회
-            List<FriendEntity> friendRequest1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
-            List<FriendEntity> friendRequest2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
+            List<FriendEntity> requestRefuse1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
+            List<FriendEntity> requestRefuse2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
             // 요청 정보가 없을 경우, 요청 실패 처리
-            if (friendRequest1.isEmpty() && friendRequest2.isEmpty()) {
+            if (requestRefuse1.isEmpty() && requestRefuse2.isEmpty()) {
                 return "fail";
             }
 
             // 친구 거절 (두 개의 해당 Entity 삭제)
-            friendRepository.deleteAll(friendRequest1);
-            friendRepository.deleteAll(friendRequest1);
+            friendRepository.deleteAll(requestRefuse1);
+            friendRepository.deleteAll(requestRefuse2);
             return "success";
 
         } catch (Exception e) {
