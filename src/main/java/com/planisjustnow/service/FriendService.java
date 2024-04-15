@@ -59,7 +59,6 @@ public class FriendService {
             // 친구 요청을 보낸 사용자와 요청을 받은 사용자의 Entity 확인
             Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
             Optional<UserEntity> toUserEntity = userRepository.findById(toUser);
-
             // 사용자 정보가 없을 경우, 요청 실패 처리
             if (!fromUserEntity.isPresent() || !toUserEntity.isPresent()) {
                 return "fail";
@@ -68,6 +67,11 @@ public class FriendService {
             // 친구 요청목록 조회
             List<FriendEntity> friendRequest1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
             List<FriendEntity> friendRequest2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
+            // 요청 정보가 없을 경우, 요청 실패 처리
+            if (friendRequest1.isEmpty() && friendRequest2.isEmpty()) {
+                return "fail";
+            }
+
 
             // 친구 수락 (is_friend의 값을 1로 변경)
             for (FriendEntity friendRequest : friendRequest1) {
