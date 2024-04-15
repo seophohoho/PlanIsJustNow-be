@@ -35,7 +35,17 @@ public class FriendController {
     }
 
     // 친구 수락
-    //@PostMapping("friend-acceptance");
+    @PostMapping("requestAccept")
+    public  ResponseEntity<ResponseDto> acceptFriendRequest(@RequestBody FriendDto friendDto) {
+        String result = friendService.requestAccept(friendDto);
+        if (result.equals("success")) {
+            ResponseDto responseDto = new ResponseDto("success", ".");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        } else {
+            ResponseDto responseDto = new ResponseDto("fail", "friendRequest Accept fail");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     // 친구 거절
     //@PostMapping("friend-refusal");
