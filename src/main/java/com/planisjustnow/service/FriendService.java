@@ -72,7 +72,6 @@ public class FriendService {
                 return "fail";
             }
 
-
             // 친구 수락 (is_friend의 값을 1로 변경)
             for (FriendEntity friendRequest : friendRequest1) {
                 friendRequest.setIs_friend(1);
