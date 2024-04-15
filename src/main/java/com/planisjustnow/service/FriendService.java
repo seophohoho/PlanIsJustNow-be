@@ -72,8 +72,8 @@ public class FriendService {
             }
 
             // 친구 요청목록 조회
-            List<FriendEntity> friendRequest1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
-            List<FriendEntity> friendRequest2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
+            List<FriendEntity> friendRequest1 = friendRepository.findByFromAndToAndIsFriend(fromUserEntity.get(), toUserEntity.get(), 0);
+            List<FriendEntity> friendRequest2 = friendRepository.findByFromAndToAndIsFriend(toUserEntity.get(), fromUserEntity.get(), 0);
             // 요청 정보가 없을 경우, 요청 실패 처리
             if (friendRequest1.isEmpty() && friendRequest2.isEmpty()) {
                 return "fail";
@@ -110,8 +110,8 @@ public class FriendService {
             }
 
             // 친구 요청목록 조회
-            List<FriendEntity> requestRefuse1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
-            List<FriendEntity> requestRefuse2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
+            List<FriendEntity> requestRefuse1 = friendRepository.findByFromAndToAndIsFriend(fromUserEntity.get(), toUserEntity.get(), 0);
+            List<FriendEntity> requestRefuse2 = friendRepository.findByFromAndToAndIsFriend(toUserEntity.get(), fromUserEntity.get(), 0);
             // 요청 정보가 없을 경우, 요청 실패 처리
             if (requestRefuse1.isEmpty() && requestRefuse2.isEmpty()) {
                 return "fail";
