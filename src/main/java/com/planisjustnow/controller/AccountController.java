@@ -45,7 +45,7 @@ public class AccountController {
             jwtUtil.createToken(accountSignInDto.getEmail(),httpServletResponse);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
-        else if(result.equals("not matche")){
+        else if(result.equals("false:Not matche")){
             ResponseDto responseDto = new ResponseDto("fail","Not matched error",null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }

@@ -45,11 +45,10 @@ public class AccountService {
         try{
             UserEntity accountInfo = findAccountInfo(accountSignInDto.getEmail());
             if(passwordEncoder.matches(accountSignInDto.getPassword(),accountInfo.getPassword())){
-//                jwtUtil.createToken(accountInfo.getEmail(),response);
                 return "success";
             }
             else{
-                return "false";
+                return "false:Not matche";
             }
         } catch(Exception e){
             System.err.println(e);
