@@ -60,10 +60,20 @@ public class FriendController {
         }
     }
 
+    // 친구 거절
+    @PostMapping("friendDelete")
+    public ResponseEntity<ResponseDto> deleteFriend(@RequestBody FriendDto friendDto) {
+        String result = friendService.friendDelete(friendDto);
+        if (result.equals("success")) {
+            ResponseDto responseDto = new ResponseDto("success", ".");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        } else {
+            ResponseDto responseDto = new ResponseDto("fail", "friend delete fail");
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // 친구 조회
     //@PostMapping("friend-inquiry");
-
-    // 친구 삭제
-    //@PostMapping("friend-delete");
 
 }
