@@ -65,9 +65,19 @@ public class FriendService {
                 return "fail";
             }
 
-            // 친구 요청 수락 (is_friend의 값을 1로 변경)
-            List<FriendEntity> friendRequest = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
+            // 친구 요청목록 조회
+            List<FriendEntity> friendRequest1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
+            List<FriendEntity> friendRequest2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
 
+            // 친구 수락 (is_friend의 값을 1로 변경)
+            for (FriendEntity friendRequest : friendRequest1) {
+                friendRequest.setIs_friend(1);
+                friendRepository.save(friendRequest);
+            }
+            for (FriendEntity friendRequest : friendRequest2) {
+                friendRequest.setIs_friend(1);
+                friendRepository.save(friendRequest);
+            }
             return "success";
 
         } catch (Exception e) {
