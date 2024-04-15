@@ -88,4 +88,36 @@ public class FriendService {
         }
     }
 
+    @Transactional
+    public String requestRefuse(FriendDto friendDto) {
+        try {
+            String fromUser = friendDto.getFrom();
+            String toUser = friendDto.getTo();
+
+            // 친구 요청을 보낸 사용자와 요청을 받은 사용자의 Entity 확인
+            Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
+            Optional<UserEntity> toUserEntity = userRepository.findById(toUser);
+            // 사용자 정보가 없을 경우, 요청 실패 처리
+            if (!fromUserEntity.isPresent() || !toUserEntity.isPresent()) {
+                return "fail";
+            }
+
+            // 친구 요청목록 조회
+            List<FriendEntity> friendRequest1 = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
+            List<FriendEntity> friendRequest2 = friendRepository.findByFromAndTo(toUserEntity.get(), fromUserEntity.get());
+            // 요청 정보가 없을 경우, 요청 실패 처리
+            if (friendRequest1.isEmpty() && friendRequest2.isEmpty()) {
+                return "fail";
+            }
+
+            // 친구 거절 (두 개의 해당 Entity 삭제)
+            friendRepository.deleteAll(friendRequest1);
+            friendRepository.deleteAll(friendRequest1);
+            return "success";
+
+        } catch (Exception e) {
+            return "fail";
+        }
+    }
+
 }
