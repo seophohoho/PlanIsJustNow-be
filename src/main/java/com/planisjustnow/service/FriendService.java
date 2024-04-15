@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,7 +66,7 @@ public class FriendService {
             }
 
             // 친구 요청 수락 (is_friend의 값을 1로 변경)
-            Optional<FriendEntity> friendRequest = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
+            List<FriendEntity> friendRequest = friendRepository.findByFromAndTo(fromUserEntity.get(), toUserEntity.get());
 
             return "success";
 
