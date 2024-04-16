@@ -2,6 +2,7 @@ package com.planisjustnow.controller;
 
 import com.planisjustnow.data.dto.FriendDto;
 import com.planisjustnow.data.dto.ResponseDto;
+import com.planisjustnow.data.entity.FriendEntity;
 import com.planisjustnow.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/friend")
@@ -73,7 +76,14 @@ public class FriendController {
         }
     }
 
-    // 친구 조회
-    //@PostMapping("friend-inquiry");
+    @PostMapping("friendInquiry")
+    public ResponseEntity<List<String>> inquiryFriend(@RequestBody FriendDto friendDto) {
+        List<String> friendEmails = friendService.friendInquiry(friendDto);
+        if (friendEmails.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(friendEmails);
+        }
+    }
 
 }

@@ -13,7 +13,7 @@ public interface FriendRepository extends JpaRepository<FriendEntity, Integer> {
     List<FriendEntity> findByFromAndTo(UserEntity from, UserEntity to);
     @Query("SELECT f FROM FriendEntity f WHERE f.from = :from AND f.to = :to AND f.is_friend = :isFriend")
     List<FriendEntity> findByFromAndToAndIsFriend(@Param("from") UserEntity from, @Param("to") UserEntity to, @Param("isFriend") Integer isFriend);
-
-
+    @Query("SELECT f FROM FriendEntity f WHERE f.from = :from AND f.is_friend = :isFriend")
+    List<FriendEntity> findFriendsByFromAndIsFriend(@Param("from") UserEntity from, @Param("isFriend") Integer isFriend);
 
 }

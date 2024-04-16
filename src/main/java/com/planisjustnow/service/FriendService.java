@@ -9,7 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -133,7 +134,7 @@ public class FriendService {
             String fromUser = friendDto.getFrom();
             String toUser = friendDto.getTo();
 
-            // 친구 요청을 보낸 사용자와 요청을 받은 사용자의 Entity 확인
+            // 서로 친구인 사용자의 Entity 확인
             Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
             Optional<UserEntity> toUserEntity = userRepository.findById(toUser);
             // 사용자 정보가 없을 경우, 요청 실패 처리
@@ -156,6 +157,32 @@ public class FriendService {
 
         } catch (Exception e) {
             return "fail";
+        }
+    }
+
+    @Transactional
+    public List<String> friendInquiry(FriendDto friendDto) {
+        try {
+            String fromUser = friendDto.getFrom();
+
+            // 서로 친구인 사용자의 Entity 확인
+            Optional<UserEntity> fromUserEntity = userRepository.findById(fromUser);
+            // 친구인 사용자가 없을 경우, 빈 리스트 반환
+            if (!fromUserEntity.isPresent()) {
+                return Collections.emptyList();
+            }
+
+            // 친구 목록에 존재하는지(친구여부) 조회 (is_friend가 1이어여지 친구라는 의미이므로 조회 가능)
+            List<FriendEntity> friends = friendRepository.findFriendsByFromAndIsFriend(fromUserEntity.get(), 1);
+            // 친구 유저의 이메일만 추출하여 리스트에 담고 반환
+            List<String> friendEmails = new ArrayList<>();
+            for (FriendEntity friend : friends) {
+                friendEmails.add(friend.getTo().getEmail());
+            }
+            return friendEmails;
+
+        } catch (Exception e) {
+            return Collections.emptyList();
         }
     }
 
