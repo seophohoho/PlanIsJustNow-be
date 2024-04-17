@@ -68,4 +68,16 @@ public class UserController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("all-pet-info")
+    public ResponseEntity<ResponseDto> orderAllPetInfo(HttpServletResponse httpServletResponse) {
+        Map<String,Object> result = userPetService.getAllPetInfo();
+        if(result.get("result").equals("success")){
+            ResponseDto responseDto = new ResponseDto("success","has",result.get("list"));
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        }
+        else{
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -2,14 +2,8 @@ package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.ChoicePetDto;
 import com.planisjustnow.data.dto.UserInfoDto;
-import com.planisjustnow.data.entity.NatureEntity;
-import com.planisjustnow.data.entity.PetEntity;
-import com.planisjustnow.data.entity.UserEntity;
-import com.planisjustnow.data.entity.UserPetEntity;
-import com.planisjustnow.data.repository.NatureRepository;
-import com.planisjustnow.data.repository.PetRepository;
-import com.planisjustnow.data.repository.UserPetRepository;
-import com.planisjustnow.data.repository.UserRepository;
+import com.planisjustnow.data.entity.*;
+import com.planisjustnow.data.repository.*;
 import com.planisjustnow.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.checkerframework.checker.units.qual.A;
@@ -36,6 +30,8 @@ public class UserPetService {
     private UserRepository userRepository;
     @Autowired
     private PetRepository petRepository;
+    @Autowired
+    private AllPetRepository allPetRepository;
     @Autowired
     private JwtUtil jwtUtil;
     @Transactional
@@ -90,6 +86,26 @@ public class UserPetService {
         }
         return resultMap;
     }
+    @Transactional
+    public Map<String,Object> getAllPetInfo(){
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            List<AllPetEntity> list = findAllPetInfo();
+            if(list.size() > 0){
+                resultMap.put("result", "success");
+                resultMap.put("list", list);
+            }
+            else{
+                resultMap.put("result", "success:nothing");
+                resultMap.put("list", Collections.emptyList());
+            }
+        }catch(NullPointerException e){
+            resultMap.put("result", "fail:Unexpected error");
+            resultMap.put("list", null);
+        }
+        return resultMap;
+    }
+    public List<AllPetEntity> findAllPetInfo(){return allPetRepository.findAll();}
     public List<UserPetEntity> findUserPetInfo(String email){
         return userPetRepository.findAllByUserIdEmail(email);
     }
