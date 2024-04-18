@@ -28,7 +28,7 @@ public class UserController {
     private UserPetService userPetService;
     @Autowired
     private JwtUtil jwtUtil;
-    @PostMapping("choice-pet")
+    @PostMapping("pet-signup")
     public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
