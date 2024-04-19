@@ -1,21 +1,15 @@
 package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.ChoicePetDto;
-import com.planisjustnow.data.dto.UserInfoDto;
 import com.planisjustnow.data.entity.*;
 import com.planisjustnow.data.repository.*;
 import com.planisjustnow.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserPetService {
@@ -67,24 +61,30 @@ public class UserPetService {
         return random.nextInt(maxFriendShip) + minFriendship;
     }
     @Transactional
-    public Map<String, Object> isHasPet(String userId){
-        Map<String, Object> resultMap = new HashMap<>();
+    public Map<String, List<Object>> isHasPet(String userId){
         try {
-            List<UserPetEntity> userPetList = findUserPetInfo(userId);
-            System.out.println(userPetList);
-            if(userPetList.size() > 0){
-                resultMap.put("result", "success:has");
-                resultMap.put("userPetList", userPetList);
+            Map<String, List<Object>> resultMap = new HashMap<>();
+            List<UserPetEntity> userPets = findUserPetInfo(userId);
+            System.out.println(userPets.size());
+            List<Object> lst = new ArrayList<>();
+            for(UserPetEntity userPet: userPets){
+                Map<String,Object> petDetails = new HashMap<>();
+                petDetails.put("petId",userPet.getPetId());
+                petDetails.put("natureId",userPet.getNatureId());
+                petDetails.put("nickname",userPet.getPetName());
+                petDetails.put("maxFriendShip",userPet.getMaxFriendship());
+                petDetails.put("currentFriendShip",userPet.getCurrentFriendship());
+                petDetails.put("runWayCount",userPet.getRunWayCount());
+                lst.add(petDetails);
+
+                System.out.println(userPet.getPetName());
+
             }
-            else{
-                resultMap.put("result", "success:nothing");
-                resultMap.put("userPetList", Collections.emptyList());
-            }
+            resultMap.put("result",lst);
+            return resultMap;
         }catch(NullPointerException e){
-            resultMap.put("result", "fail:Unexpected error");
-            resultMap.put("userPetList", null);
+            return null;
         }
-        return resultMap;
     }
     @Transactional
     public Map<String,Object> getAllPetInfo(){

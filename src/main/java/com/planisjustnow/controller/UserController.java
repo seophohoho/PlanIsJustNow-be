@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -48,24 +50,26 @@ public class UserController {
     }
     @GetMapping("has-pet")
     public ResponseEntity<ResponseDto> orderIsHasPet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse){
+        ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null);
             System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
-        Map<String,Object> result = userPetService.isHasPet(userId);
-        if(result.get("result").equals("success:has")){
-            ResponseDto responseDto = new ResponseDto("success","has",result.get("userPetList"));
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        Map<String, List<Object>> result = userPetService.isHasPet(userId);
+        if(result.isEmpty()){
+            responseDto = new ResponseDto("success","nothing",new ArrayList<>());
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
-        else if(result.get("result").equals("success:nothing")){
-            ResponseDto responseDto = new ResponseDto("success","nothing",null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        else if(result == null){
+            responseDto = new ResponseDto("fail",".",null);
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.BAD_REQUEST);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+            responseDto = new ResponseDto("success","has",result.get("result"));
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+
         }
     }
     @GetMapping("all-pet-info")
