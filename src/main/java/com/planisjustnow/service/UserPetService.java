@@ -33,6 +33,13 @@ public class UserPetService {
         Integer natureId = getRandomNature();
         int maxFriendship = getRandomMaxFriendship();
 
+        List<UserPetEntity> userPets = findUserPetInfo(userId);
+        if(userPets.size() > 0){
+            for(UserPetEntity userPet: userPets){
+                userPet.setLastChoice(0);
+            }
+        }
+
         UserEntity entity1 = userRepository.findByEmail(userId);
         PetEntity entity2 = petRepository.findByPetId(choicePetDto.getSpecies());
         NatureEntity entity3 = natureRepository.findByNatureId(natureId);
