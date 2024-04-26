@@ -87,7 +87,6 @@ public class TodoListController {
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
             responseDto = new ResponseDto("redirect", "/", null);
-            System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         String result = todolistService.completeTodolist(userId,todolistDto.getIdx());
@@ -107,7 +106,6 @@ public class TodoListController {
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
             responseDto = new ResponseDto("redirect", "/", null);
-            System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userId);

@@ -12,6 +12,10 @@ public class PetEntity {
     @Id
     @Column(name="id")
     private Integer petId;
+    @Column(name="info")
+    private String info;
+    @Column(name="path")
+    private String path;
     @Column(name="species")
     private String species;
     @OneToMany(mappedBy = "petId")
@@ -29,5 +33,20 @@ public class PetEntity {
 
     public void setSpecies(String species) {
         this.species = species;
+    }
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

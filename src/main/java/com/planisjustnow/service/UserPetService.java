@@ -45,6 +45,7 @@ public class UserPetService {
             userPetEntity.setMaxFriendship(maxFriendship);
             userPetEntity.setCurrentFriendship(0);
             userPetEntity.setRunWayCount(0);
+            userPetEntity.setLastChoice(1);
             userPetRepository.save(userPetEntity);
         }
         catch(Exception e){
@@ -75,6 +76,7 @@ public class UserPetService {
                 petDetails.put("maxFriendShip",userPet.getMaxFriendship());
                 petDetails.put("currentFriendShip",userPet.getCurrentFriendship());
                 petDetails.put("runWayCount",userPet.getRunWayCount());
+                petDetails.put("lastChoice",userPet.getLastChoice());
                 lst.add(petDetails);
 
                 System.out.println(userPet.getPetName());

@@ -30,6 +30,16 @@ public class UserPetEntity {
     private int currentFriendship;
     @Column(name="run_way_count")
     private int runWayCount;
+    @Column(name="last_choice")
+    private int lastChoice;
+
+    public int getLastChoice() {
+        return lastChoice;
+    }
+
+    public void setLastChoice(int lastChoice) {
+        this.lastChoice = lastChoice;
+    }
 
     public Integer getIdx() {
         return idx;
