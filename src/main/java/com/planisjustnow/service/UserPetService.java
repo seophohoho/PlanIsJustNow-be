@@ -1,6 +1,7 @@
 package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.ChoicePetDto;
+import com.planisjustnow.data.dto.PetSignUpDto;
 import com.planisjustnow.data.entity.*;
 import com.planisjustnow.data.repository.*;
 import com.planisjustnow.utils.JwtUtil;
@@ -29,7 +30,7 @@ public class UserPetService {
     @Autowired
     private JwtUtil jwtUtil;
     @Transactional
-    public String setUserPet(String userId, ChoicePetDto choicePetDto){
+    public String petSignup(String userId, PetSignUpDto petSignUpDto){
         Integer natureId = getRandomNature();
         int maxFriendship = getRandomMaxFriendship();
 
@@ -41,14 +42,14 @@ public class UserPetService {
         }
 
         UserEntity entity1 = userRepository.findByEmail(userId);
-        PetEntity entity2 = petRepository.findByPetId(choicePetDto.getSpecies());
+        PetEntity entity2 = petRepository.findByPetId(petSignUpDto.getSpecies());
         NatureEntity entity3 = natureRepository.findByNatureId(natureId);
         UserPetEntity userPetEntity = new UserPetEntity();
         try{
             userPetEntity.setUserId(entity1);
             userPetEntity.setPetId(entity2);
             userPetEntity.setNatureId(entity3);
-            userPetEntity.setPetName(choicePetDto.getNickname());
+            userPetEntity.setPetName(petSignUpDto.getNickname());
             userPetEntity.setMaxFriendship(maxFriendship);
             userPetEntity.setCurrentFriendship(0);
             userPetEntity.setRunWayCount(0);
@@ -60,6 +61,28 @@ public class UserPetService {
         }
         return "success";
     }
+    public String choicePet(String userId, ChoicePetDto choicePetDto){
+        List<UserPetEntity> userPets = findUserPetInfo(userId);
+        if(userPets.size() > 0){
+            for(UserPetEntity userPet: userPets){
+                userPet.setLastChoice(0);
+            }
+        }
+        try{
+            Optional<UserPetEntity> userPet = userPetRepository.findById(choicePetDto.getIdx());
+            if(userPet.isPresent()){
+                userPet.get().setLastChoice(1);
+                userPetRepository.save(userPet.get());
+            }else{
+                return "fail:Pet not found";
+            }
+        }catch (Exception e){
+            System.out.println(e);
+            return "fail:Unexpected error";
+        }
+        return "success";
+    }
+
     private Integer getRandomNature(){
         SecureRandom random = new SecureRandom();
         return random.nextInt(natureListCount) + 0;
@@ -73,10 +96,10 @@ public class UserPetService {
         try {
             Map<String, List<Object>> resultMap = new HashMap<>();
             List<UserPetEntity> userPets = findUserPetInfo(userId);
-            System.out.println(userPets.size());
             List<Object> lst = new ArrayList<>();
             for(UserPetEntity userPet: userPets){
                 Map<String,Object> petDetails = new HashMap<>();
+                petDetails.put("idx",userPet.getIdx());
                 petDetails.put("petId",userPet.getPetId());
                 petDetails.put("natureId",userPet.getNatureId());
                 petDetails.put("nickname",userPet.getPetName());
@@ -85,8 +108,6 @@ public class UserPetService {
                 petDetails.put("runWayCount",userPet.getRunWayCount());
                 petDetails.put("lastChoice",userPet.getLastChoice());
                 lst.add(petDetails);
-
-                System.out.println(userPet.getPetName());
 
             }
             resultMap.put("result",lst);

@@ -1,24 +1,13 @@
 package com.planisjustnow.data.dto;
 
-import com.planisjustnow.data.entity.PetEntity;
-
 public class ChoicePetDto {
-    Integer species;
-    String nickname;
+    private Integer idx;
 
-    public Integer getSpecies() {
-        return species;
+    public Integer getIdx() {
+        return idx;
     }
 
-    public void setSpecies(Integer species) {
-        this.species = species;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setIdx(Integer idx) {
+        this.idx = idx;
     }
 }
