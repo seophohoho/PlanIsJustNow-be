@@ -15,4 +15,10 @@ public interface TodolistRepository extends JpaRepository <TodolistEntity,Long> 
     @Modifying
     @Query("DELETE FROM TodolistEntity t WHERE t.userId = :user AND t.idx = :idx")
     void deleteByUserIdAndIdx(@Param("user") UserEntity user, @Param("idx") Long idx);
+
+    @Query("SELECT COUNT(*) FROM TodolistEntity t WHERE t.userId = :user AND t.startDate = :start_date AND t.isImportant = 0 AND t.isComplete = 0")
+    Long countNormalTask(@Param("user") UserEntity user, @Param("start_date") String start_date);
+
+    @Query("SELECT COUNT(*) FROM TodolistEntity t WHERE t.userId = :user AND t.startDate = :start_date AND t.isImportant = 1 AND t.isComplete = 0")
+    Long countImportantTask(@Param("user") UserEntity user, @Param("start_date") String start_date);
 }

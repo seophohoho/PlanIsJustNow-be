@@ -2,26 +2,36 @@ package com.planisjustnow.service;
 
 import com.planisjustnow.data.dto.TodoListAddDto;
 import com.planisjustnow.data.dto.TodoListUpdateDto;
-import com.planisjustnow.data.dto.TodolistDto;
+import com.planisjustnow.data.entity.NatureEntity;
 import com.planisjustnow.data.entity.TodolistEntity;
 import com.planisjustnow.data.entity.UserEntity;
+import com.planisjustnow.data.entity.UserPetEntity;
+import com.planisjustnow.data.repository.NatureRepository;
 import com.planisjustnow.data.repository.TodolistRepository;
+import com.planisjustnow.data.repository.UserPetRepository;
 import com.planisjustnow.data.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class TodolistService {
     private final TodolistRepository todolistRepository;
     private final UserRepository userRepository;
+    private final NatureRepository natureRepository;
+    private final UserPetRepository userPetRepository;
 
-    public TodolistService(TodolistRepository todolistRepository, UserRepository userRepository) {
+    static final int importantTodoValue = 10;
+    static final int normalTodoValue = 5;
+
+    public TodolistService(TodolistRepository todolistRepository, UserRepository userRepository, NatureRepository natureRepository, UserPetRepository userPetRepository) {
         this.todolistRepository = todolistRepository;
         this.userRepository = userRepository;
+        this.natureRepository = natureRepository;
+        this.userPetRepository = userPetRepository;
     }
 
     @Transactional
@@ -108,6 +118,29 @@ public class TodolistService {
             return groupedTasks;
         }catch (NullPointerException e){
             return null;
+        }
+    }
+    @Scheduled(fixedRate = 100000)
+    public void calcFriendShip(){
+        LocalDate today = LocalDate.now(); //<-실제 서비스 환경에서는 이 변수 쓰자.
+        String test = "2024-04-28";
+        List<UserEntity> userList = userRepository.findAll();
+
+        for(UserEntity user : userList){
+            Long normalTasksCount = todolistRepository.countNormalTask(user, test);
+            Long importantTasksCount = todolistRepository.countImportantTask(user, test);
+            UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user);
+            if(targetUserPet != null){
+                int currentFriendShip = targetUserPet.getCurrentFriendship();
+                NatureEntity targetNature = targetUserPet.getNatureId();
+                int targetNatureBonusFriendship = targetNature.getBonusDrop();
+                int userTodoFailureCount = targetUserPet.getUserId().getTodolistFailureCount();
+                int importResult = targetNatureBonusFriendship + importantTodoValue;
+                int normalResult = targetNatureBonusFriendship + normalTodoValue;
+                currentFriendShip = (currentFriendShip) - (importResult + normalResult);
+                targetUserPet.setCurrentFriendship(currentFriendShip+(userTodoFailureCount*2));
+                userPetRepository.save(targetUserPet);
+            }
         }
     }
 }
