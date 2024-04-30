@@ -4,6 +4,7 @@ public class ResponseDto {
     String messageTitle;
     String messageDetail;
     Object data;
+    Object userInfo;
 
     public Object getData() {
         return data;
@@ -28,9 +29,19 @@ public class ResponseDto {
     public void setMessageDetail(String messageDetail) {
         this.messageDetail = messageDetail;
     }
-    public ResponseDto(String messageTitle,String messageDetail,Object data){
+
+    public Object getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(Object userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public ResponseDto(String messageTitle, String messageDetail, Object data,Object userInfo){
         this.messageTitle = messageTitle;
         this.messageDetail = messageDetail;
         this.data = data;
+        this.userInfo = userInfo;
     }
 }

@@ -28,17 +28,17 @@ public class TodoListController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null,null);
             System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         Map<String,Object> result = todolistService.addTodolist(userId,todoListAddDto);
         if(result.get("result").equals("success")){
-            responseDto = new ResponseDto("success",".",result.get("data"));
+            responseDto = new ResponseDto("success",".",result.get("data"),null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.get("result").equals("fail")){
-            responseDto = new ResponseDto("fail","Unexpected error",null);
+            responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -48,16 +48,16 @@ public class TodoListController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null,null);
             System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         String result = todolistService.deleteTodolist(userId,todolistDto.getIdx());
         if (result.equals("success")) {
-            responseDto = new ResponseDto("success", ".", null);
+            responseDto = new ResponseDto("success", ".", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         } else if (result.equals("fail")) {
-            responseDto = new ResponseDto("fail", "Unexpected error", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -67,16 +67,16 @@ public class TodoListController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null,null);
             System.out.println("토큰을 발급받아라.");
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         String result = todolistService.modifyTodolist(userId,todoListUpdateDto);
         if(result.equals("success")){
-            responseDto = new ResponseDto("success", ".", null);
+            responseDto = new ResponseDto("success", ".", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         } else if(result.equals("fail")){
-            responseDto = new ResponseDto("fail", "Unexpected error", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -86,16 +86,16 @@ public class TodoListController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         String result = todolistService.completeTodolist(userId,todolistDto.getIdx());
         if(result.equals("success")){
-            responseDto = new ResponseDto("success",".",null);
+            responseDto = new ResponseDto("success",".",null,null);
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
         else if(result.equals("fail")){
-            responseDto = new ResponseDto("fail", "Unexpected error", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         return null;
@@ -105,20 +105,20 @@ public class TodoListController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userId);
         if (tasks.isEmpty()) {
-            responseDto = new ResponseDto("success","empty",new ArrayList<>());
+            responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
         else if(tasks == null){
-            responseDto = new ResponseDto("fail", "Unexpected error", null);
+            responseDto = new ResponseDto("fail", "Unexpected error", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         else{
-            responseDto = new ResponseDto("success", ".", tasks);
+            responseDto = new ResponseDto("success", ".", tasks,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
     }

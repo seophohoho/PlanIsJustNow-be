@@ -25,15 +25,15 @@ public class AccountController {
     public ResponseEntity<ResponseDto> orderSignUp(@RequestBody AccountSignUpDto accountSignUpDto){
         String result = accountService.signUp(accountSignUpDto);
         if(result.equals("success")){
-            ResponseDto responseDto = new ResponseDto("success",".",null);
+            ResponseDto responseDto = new ResponseDto("success",".",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("fail:Email is already in use")){
-            ResponseDto responseDto = new ResponseDto("fail","Email is already in use",null);
+            ResponseDto responseDto = new ResponseDto("fail","Email is already in use",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.CONFLICT);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
@@ -41,16 +41,16 @@ public class AccountController {
     public ResponseEntity<ResponseDto> orderSignIn(@RequestBody AccountSignInDto accountSignInDto, HttpServletResponse httpServletResponse){
         String result = accountService.signIn(accountSignInDto,httpServletResponse);
         if(result.equals("success")){
-            ResponseDto responseDto = new ResponseDto("success",".",null);
+            ResponseDto responseDto = new ResponseDto("success",".",null,null);
             jwtUtil.createToken(accountSignInDto.getEmail(),httpServletResponse);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("false:Not matche")){
-            ResponseDto responseDto = new ResponseDto("fail","Not matched error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Not matched error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }

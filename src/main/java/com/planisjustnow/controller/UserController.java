@@ -31,16 +31,16 @@ public class UserController {
     public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody PetSignUpDto petSignUpDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            ResponseDto responseDto = new ResponseDto("redirect", "/", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
         String result = userPetService.petSignup(userId, petSignUpDto);
         if(result.equals("success")){
-            ResponseDto responseDto = new ResponseDto("success",".",null);
+            ResponseDto responseDto = new ResponseDto("success",".",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
@@ -49,33 +49,32 @@ public class UserController {
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            responseDto = new ResponseDto("redirect", "/", null);
+            responseDto = new ResponseDto("redirect", "/", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
-        Map<String, List<Object>> result = userPetService.isHasPet(userId);
+        Map<String, Object> result = userPetService.isHasPet(userId);
         if(result.isEmpty()){
-            responseDto = new ResponseDto("success","nothing",new ArrayList<>());
+            responseDto = new ResponseDto("success","nothing",new ArrayList<>(),result.get("userInfo"));
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
         else if(result == null){
-            responseDto = new ResponseDto("fail",".",null);
+            responseDto = new ResponseDto("fail",".",null,null);
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.BAD_REQUEST);
         }
         else{
-            responseDto = new ResponseDto("success","has",result.get("result"));
+            responseDto = new ResponseDto("success","has",result.get("result"),result.get("userInfo"));
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
-
         }
     }
     @GetMapping("all-pet-info")
     public ResponseEntity<ResponseDto> orderAllPetInfo(HttpServletResponse httpServletResponse) {
         Map<String,Object> result = userPetService.getAllPetInfo();
         if(result.get("result").equals("success")){
-            ResponseDto responseDto = new ResponseDto("success","has",result.get("list"));
+            ResponseDto responseDto = new ResponseDto("success","has",result.get("list"),null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
@@ -83,20 +82,20 @@ public class UserController {
     public ResponseEntity<ResponseDto> orderChoicePet(@RequestBody ChoicePetDto choicePetDto,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
         if(userId.equals("fail:Token-not-found")){
-            ResponseDto responseDto = new ResponseDto("redirect", "/", null);
+            ResponseDto responseDto = new ResponseDto("redirect", "/", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
         String result = userPetService.choicePet(userId, choicePetDto);
         if(result.equals("success")){
-            ResponseDto responseDto = new ResponseDto("success",".",null);
+            ResponseDto responseDto = new ResponseDto("success",".",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("fail:Pet not found")){
-            ResponseDto responseDto = new ResponseDto("fail","Pet not found",null);
+            ResponseDto responseDto = new ResponseDto("fail","Pet not found",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
         else{
-            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null);
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }

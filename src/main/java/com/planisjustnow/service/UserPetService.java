@@ -92,10 +92,11 @@ public class UserPetService {
         return random.nextInt(maxFriendShip) + minFriendship;
     }
     @Transactional
-    public Map<String, List<Object>> isHasPet(String userId){
+    public Map<String, Object> isHasPet(String userId){
         try {
-            Map<String, List<Object>> resultMap = new HashMap<>();
+            Map<String, Object> resultMap = new HashMap<>();
             List<UserPetEntity> userPets = findUserPetInfo(userId);
+            Optional<UserEntity> user = userRepository.findById(userId);
             List<Object> lst = new ArrayList<>();
             for(UserPetEntity userPet: userPets){
                 Map<String,Object> petDetails = new HashMap<>();
@@ -108,9 +109,14 @@ public class UserPetService {
                 petDetails.put("runWayCount",userPet.getRunWayCount());
                 petDetails.put("lastChoice",userPet.getLastChoice());
                 lst.add(petDetails);
-
             }
             resultMap.put("result",lst);
+
+            Map<String,Object> userDetails = new HashMap<>();
+            userDetails.put("nickname",user.get().getNickname());
+            userDetails.put("userId",user.get().getEmail());
+            userDetails.put("profileUrl",user.get().getImageUrl());
+            resultMap.put("userInfo",userDetails);
             return resultMap;
         }catch(NullPointerException e){
             return null;

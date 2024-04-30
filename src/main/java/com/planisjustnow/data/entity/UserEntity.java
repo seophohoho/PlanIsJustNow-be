@@ -18,6 +18,8 @@ public class UserEntity {
     String nickname;
     @Column(name="todolist_failure_count")
     int todolistFailureCount;
+    @Column(name="image")
+    String imageUrl;
     @OneToMany(mappedBy = "userId")
     private List<UserPetEntity> userEntities = new ArrayList<UserPetEntity>();
 
@@ -36,6 +38,15 @@ public class UserEntity {
     public int getTodolistFailureCount() {
         return todolistFailureCount;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public UserEntity(){}
     public UserEntity(String email, String password, String nickname, int todolistFailureCount){
         this.email = email;
