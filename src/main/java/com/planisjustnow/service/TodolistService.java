@@ -38,7 +38,7 @@ public class TodolistService {
     public Map<String,Object> addTodolist(String userId,TodoListAddDto todoListAddDto){
         Map<String,Object> resultMap = new HashMap<>();
         try{
-            Optional<UserEntity> user = userRepository.findById(userId); // UserEntity 조회
+            Optional<UserEntity> user = userRepository.findById(userId);
             if(user.isPresent()){
                 TodolistEntity todolistEntity = new TodolistEntity(user.get(), todoListAddDto.getTitle(), todoListAddDto.getStartDate(), todoListAddDto.getTime(), todoListAddDto.getIsImportant(), 0);
                 TodolistEntity savedEntity = todolistRepository.save(todolistEntity);
@@ -92,6 +92,24 @@ public class TodolistService {
                 todolistEntity.setUserId(user.get());
                 todolistEntity.setIsComplete(1);
                 todolistRepository.save(todolistEntity);
+
+                UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user.get());
+
+                System.out.println(targetUserPet);
+                if(targetUserPet != null){
+                    int result=0;
+                    int currentFriendShip = targetUserPet.getCurrentFriendship();
+                    NatureEntity targetNature = targetUserPet.getNatureId();
+                    int targetNatureBonusFriendship = targetNature.getBonusIncrease();
+                    if(todolistEntity.getIsImportant() == 1){
+                        result = targetNatureBonusFriendship + importantTodoValue;
+                    }else {
+                        result = targetNatureBonusFriendship + normalTodoValue;
+                    }
+                    currentFriendShip = (currentFriendShip) + result;
+                    targetUserPet.setCurrentFriendship(currentFriendShip);
+                    userPetRepository.save(targetUserPet);
+                }
                 return "success";
             }
         }catch (NullPointerException e){
@@ -120,12 +138,11 @@ public class TodolistService {
             return null;
         }
     }
-    @Scheduled(fixedRate = 100000)
-    public void calcFriendShip(){
+    @Scheduled(cron = "0 56 18 * * ?")
+    public void calcDropFriendShip(){
         LocalDate today = LocalDate.now(); //<-실제 서비스 환경에서는 이 변수 쓰자.
         String test = "2024-04-28";
         List<UserEntity> userList = userRepository.findAll();
-
         for(UserEntity user : userList){
             Long normalTasksCount = todolistRepository.countNormalTask(user, test);
             Long importantTasksCount = todolistRepository.countImportantTask(user, test);
