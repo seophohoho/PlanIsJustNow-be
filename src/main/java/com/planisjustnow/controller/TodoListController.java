@@ -90,13 +90,16 @@ public class TodoListController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         String result = todolistService.completeTodolist(userId,todolistDto.getIdx());
-        if(result.equals("success")){
-            responseDto = new ResponseDto("success",".",null,null);
-            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
-        }
-        else if(result.equals("fail")){
+        if(result == null){
             responseDto = new ResponseDto("fail", "Unexpected error", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+        }
+        else{
+            String[] resultWords = result.split("\\s+");
+            if(resultWords[0].equals("success")){
+                responseDto = new ResponseDto("success",".",Integer.parseInt(resultWords[1]),null);
+                return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+            }
         }
         return null;
     }

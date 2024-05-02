@@ -1,5 +1,6 @@
 package com.planisjustnow.service;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import com.planisjustnow.data.dto.TodoListAddDto;
 import com.planisjustnow.data.dto.TodoListUpdateDto;
 import com.planisjustnow.data.entity.NatureEntity;
@@ -109,10 +110,10 @@ public class TodolistService {
                     currentFriendShip = (currentFriendShip) + result;
                     targetUserPet.setCurrentFriendship(currentFriendShip);
                     userPetRepository.save(targetUserPet);
+                    return "success"+" "+currentFriendShip;
                 }
-                return "success";
             }
-        }catch (NullPointerException e){
+        }catch (Exception e){
             return "fail";
         }
         return null;
@@ -138,7 +139,7 @@ public class TodolistService {
             return null;
         }
     }
-    @Scheduled(cron = "0 56 18 * * ?")
+    @Scheduled(cron = "0 56 18 * * ?") //<- 18시 56분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
     public void calcDropFriendShip(){
         LocalDate today = LocalDate.now(); //<-실제 서비스 환경에서는 이 변수 쓰자.
         String test = "2024-04-28";
