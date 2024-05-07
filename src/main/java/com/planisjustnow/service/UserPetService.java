@@ -33,7 +33,9 @@ public class UserPetService {
     public String petSignup(String userId, PetSignUpDto petSignUpDto){
         Integer natureId = getRandomNature();
         int maxFriendship = getRandomMaxFriendship();
-
+        int maxFriendship_0 = maxFriendship/3;
+        int maxFriendship_1 = maxFriendship_0 + (maxFriendship/3);
+        int maxFriendship_2 = maxFriendship_1 + (maxFriendship/3);
         List<UserPetEntity> userPets = findUserPetInfo(userId);
         if(userPets.size() > 0){
             for(UserPetEntity userPet: userPets){
@@ -52,8 +54,12 @@ public class UserPetService {
             userPetEntity.setPetName(petSignUpDto.getNickname());
             userPetEntity.setMaxFriendship(maxFriendship);
             userPetEntity.setCurrentFriendship(0);
+            userPetEntity.setMaxFriendship_0(maxFriendship_0);
+            userPetEntity.setMaxFriendship_1(maxFriendship_1);
+            userPetEntity.setMaxFriendship_2(maxFriendship_2);
             userPetEntity.setRunWayCount(0);
             userPetEntity.setLastChoice(1);
+            userPetEntity.setEvol(0);
             userPetRepository.save(userPetEntity);
         }
         catch(Exception e){
@@ -108,6 +114,7 @@ public class UserPetService {
                 petDetails.put("currentFriendShip",userPet.getCurrentFriendship());
                 petDetails.put("runWayCount",userPet.getRunWayCount());
                 petDetails.put("lastChoice",userPet.getLastChoice());
+                petDetails.put("evol",userPet.getEvol());
                 lst.add(petDetails);
             }
             resultMap.put("result",lst);

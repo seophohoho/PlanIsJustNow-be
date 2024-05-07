@@ -97,7 +97,7 @@ public class TodoListController {
         else{
             String[] resultWords = result.split("\\s+");
             if(resultWords[0].equals("success")){
-                responseDto = new ResponseDto("success",".",Integer.parseInt(resultWords[1]),null);
+                responseDto = new ResponseDto("success",".",Integer.parseInt(resultWords[2])+"_"+Integer.parseInt(resultWords[1]),null);
                 return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
             }
         }

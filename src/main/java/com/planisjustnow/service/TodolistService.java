@@ -108,9 +108,15 @@ public class TodolistService {
                         result = targetNatureBonusFriendship + normalTodoValue;
                     }
                     currentFriendShip = (currentFriendShip) + result;
+
+                    if(currentFriendShip <= targetUserPet.getMaxFriendship_0()){targetUserPet.setEvol(0);}
+                    else if(currentFriendShip <= targetUserPet.getMaxFriendship_1()){targetUserPet.setEvol(1);}
+                    else if(currentFriendShip <= targetUserPet.getMaxFriendship_2()){targetUserPet.setEvol(2);}
+
                     targetUserPet.setCurrentFriendship(currentFriendShip);
+                    int evol = targetUserPet.getEvol();
                     userPetRepository.save(targetUserPet);
-                    return "success"+" "+currentFriendShip;
+                    return "success"+" "+currentFriendShip+" "+evol;
                 }
             }
         }catch (Exception e){

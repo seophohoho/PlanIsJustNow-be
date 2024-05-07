@@ -28,10 +28,18 @@ public class UserPetEntity {
     private int maxFriendship;
     @Column(name="current_friendship")
     private int currentFriendship;
+    @Column(name="friendship_0")
+    private int maxFriendship_0;
+    @Column(name="friendship_1")
+    private int maxFriendship_1;
+    @Column(name="friendship_2")
+    private int maxFriendship_2;
     @Column(name="run_way_count")
     private int runWayCount;
     @Column(name="last_choice")
     private int lastChoice;
+    @Column(name="evol")
+    private int evol;
 
     public int getLastChoice() {
         return lastChoice;
@@ -103,5 +111,37 @@ public class UserPetEntity {
 
     public void setRunWayCount(int runWayCount) {
         this.runWayCount = runWayCount;
+    }
+
+    public int getMaxFriendship_0() {
+        return maxFriendship_0;
+    }
+
+    public void setMaxFriendship_0(int maxFriendship_0) {
+        this.maxFriendship_0 = maxFriendship_0;
+    }
+
+    public int getMaxFriendship_1() {
+        return maxFriendship_1;
+    }
+
+    public void setMaxFriendship_1(int maxFriendship_1) {
+        this.maxFriendship_1 = maxFriendship_1;
+    }
+
+    public int getMaxFriendship_2() {
+        return maxFriendship_2;
+    }
+
+    public void setMaxFriendship_2(int maxFriendship_2) {
+        this.maxFriendship_2 = maxFriendship_2;
+    }
+
+    public int getEvol() {
+        return evol;
+    }
+
+    public void setEvol(int evol) {
+        this.evol = evol;
     }
 }
