@@ -145,14 +145,16 @@ public class TodolistService {
             return null;
         }
     }
-    @Scheduled(cron = "0 56 18 * * ?") //<- 18시 56분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
+    @Scheduled(cron = "0 0 0 * * ?") //<- 00시 00분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
     public void calcDropFriendShip(){
-        LocalDate today = LocalDate.now(); //<-실제 서비스 환경에서는 이 변수 쓰자.
-        String test = "2024-04-28";
+        LocalDate today = LocalDate.now();
+        LocalDate targetDay = today.minusDays(1); //<-실제 서비스 환경에서는 이 변수 쓰자.
+        System.out.println(today);
+        System.out.println(targetDay);
         List<UserEntity> userList = userRepository.findAll();
         for(UserEntity user : userList){
-            Long normalTasksCount = todolistRepository.countNormalTask(user, test);
-            Long importantTasksCount = todolistRepository.countImportantTask(user, test);
+            Long normalTasksCount = todolistRepository.countNormalTask(user, String.valueOf(targetDay));
+            Long importantTasksCount = todolistRepository.countImportantTask(user, String.valueOf(targetDay));
             UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user);
             if(targetUserPet != null){
                 int currentFriendShip = targetUserPet.getCurrentFriendship();

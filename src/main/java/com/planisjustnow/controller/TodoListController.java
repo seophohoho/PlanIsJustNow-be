@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,7 +98,10 @@ public class TodoListController {
         else{
             String[] resultWords = result.split("\\s+");
             if(resultWords[0].equals("success")){
-                responseDto = new ResponseDto("success",".",Integer.parseInt(resultWords[2])+"_"+Integer.parseInt(resultWords[1]),null);
+                Map<String,Object> resultMap = new HashMap<>();
+                resultMap.put("evol",Integer.parseInt(resultWords[2]));
+                resultMap.put("friendship",Integer.parseInt(resultWords[1]));
+                responseDto = new ResponseDto("success",".",resultMap,null);
                 return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
             }
         }
