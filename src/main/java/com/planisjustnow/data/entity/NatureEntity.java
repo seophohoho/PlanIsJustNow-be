@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "nature_list")
+@Table(name = "nature_info")
 public class NatureEntity {
     @Id
     @Column(name = "id")

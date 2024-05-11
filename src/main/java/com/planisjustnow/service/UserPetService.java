@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -17,6 +19,8 @@ public class UserPetService {
     static int natureListCount = 2;
     static int maxFriendShip = 15000;
     static int minFriendship = 10000;
+    static int feedFriendship = 5;
+    static int handsFriendship = 5;
     @Autowired
     private UserPetRepository userPetRepository;
     @Autowired
@@ -147,6 +151,65 @@ public class UserPetService {
             resultMap.put("list", null);
         }
         return resultMap;
+    }
+    public String doInteraction(String userId,String id){
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId);
+            UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user.get());
+
+            if(targetUserPet!=null){
+                int currentFriendShip = targetUserPet.getCurrentFriendship();
+                if(id.equals("hands")){
+                    currentFriendShip = currentFriendShip + handsFriendship;
+                    targetUserPet.setCurrentFriendship(currentFriendShip);
+                }
+                else if(id.equals("feed")){
+                    LocalTime currentTime = LocalTime.now();
+                    String stringToTime = currentTime.toString();
+                    String[] parts = stringToTime.split("[:.]");
+                    int hour = Integer.parseInt(parts[0]);
+                    if(hour >= 7 && hour <= 9){
+                        if(targetUserPet.getFeed_1() == 0){
+                            targetUserPet.setFeed_1(1);
+                            currentFriendShip = currentFriendShip + feedFriendship;
+                        }
+                        else{
+                            return "fail";
+                        }
+                    }
+                    else if(hour >= 12 && hour <= 14){
+                        if(targetUserPet.getFeed_2() == 0){
+                            targetUserPet.setFeed_2(1);
+                            currentFriendShip = currentFriendShip + feedFriendship;
+                        }
+                        else{
+                            return "fail";
+                        }
+                    }
+                    else if(hour >= 17 && hour <= 22){
+                        if(targetUserPet.getFeed_3() == 0){
+                            targetUserPet.setFeed_3(1);
+                            currentFriendShip = currentFriendShip + feedFriendship;
+                        }
+                        else{
+                            return "fail";
+                        }
+                    }
+                }
+
+                if(currentFriendShip <= targetUserPet.getMaxFriendship_0()){targetUserPet.setEvol(0);}
+                else if(currentFriendShip <= targetUserPet.getMaxFriendship_1()){targetUserPet.setEvol(1);}
+                else if(currentFriendShip <= targetUserPet.getMaxFriendship_2()){targetUserPet.setEvol(2);}
+
+                int evol = targetUserPet.getEvol();
+
+                userPetRepository.save(targetUserPet);
+                return "success"+" "+currentFriendShip+" "+evol;
+            }
+        }catch(Exception e){
+            return "fail";
+        }
+        return null;
     }
     public List<AllPetEntity> findAllPetInfo(){return allPetRepository.findAll();}
     public List<UserPetEntity> findUserPetInfo(String email){

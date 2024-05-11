@@ -11,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,12 +46,13 @@ public class UserController {
     public ResponseEntity<ResponseDto> orderIsHasPet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse){
         ResponseDto responseDto;
         String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
-        if(userId.equals("fail:Token-not-found")){
+        if(userId.equals("fail:Token-not-found") || userId == null){
             responseDto = new ResponseDto("redirect", "/", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED); // HTTP 상태 코드 302
         }
         Map<String, Object> result = userPetService.isHasPet(userId);
-        if(result.isEmpty()){
+        List<?> resultList = (List<?>) result.get("result");
+        if(resultList.isEmpty()){
             responseDto = new ResponseDto("success","nothing",new ArrayList<>(),result.get("userInfo"));
             return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
         }
@@ -96,6 +95,27 @@ public class UserController {
         }
         else{
             ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("interaction")
+    public ResponseEntity<ResponseDto> orderInteraction(@RequestParam String id,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        String userId = jwtUtil.parseToken(httpServletRequest,httpServletResponse);
+        ResponseDto responseDto;
+        if(userId.equals("fail:Token-not-found")){
+            responseDto = new ResponseDto("redirect", "/", null,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        String[] result = userPetService.doInteraction(userId,id).split("\\s+");
+        if(result[0].equals("success")){
+            Map<String,Object> resultMap = new HashMap<>();
+            resultMap.put("evol",Integer.parseInt(result[2]));
+            resultMap.put("friendship",Integer.parseInt(result[1]));
+            responseDto = new ResponseDto("success",".",resultMap,null);
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+        }
+        else{
+            responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }

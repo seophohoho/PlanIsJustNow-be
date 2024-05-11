@@ -96,7 +96,6 @@ public class TodolistService {
 
                 UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user.get());
 
-                System.out.println(targetUserPet);
                 if(targetUserPet != null){
                     int result=0;
                     int currentFriendShip = targetUserPet.getCurrentFriendship();
@@ -149,8 +148,6 @@ public class TodolistService {
     public void calcDropFriendShip(){
         LocalDate today = LocalDate.now();
         LocalDate targetDay = today.minusDays(1); //<-실제 서비스 환경에서는 이 변수 쓰자.
-        System.out.println(today);
-        System.out.println(targetDay);
         List<UserEntity> userList = userRepository.findAll();
         for(UserEntity user : userList){
             Long normalTasksCount = todolistRepository.countNormalTask(user, String.valueOf(targetDay));
@@ -163,8 +160,14 @@ public class TodolistService {
                 int userTodoFailureCount = targetUserPet.getUserId().getTodolistFailureCount();
                 int importResult = targetNatureBonusFriendship + importantTodoValue;
                 int normalResult = targetNatureBonusFriendship + normalTodoValue;
-                currentFriendShip = (currentFriendShip) - (importResult + normalResult);
-                targetUserPet.setCurrentFriendship(currentFriendShip+(userTodoFailureCount*2));
+                int todoFailureValue = userTodoFailureCount*2;
+                currentFriendShip = (currentFriendShip) - (importResult + normalResult + todoFailureValue);
+                targetUserPet.setCurrentFriendship(currentFriendShip);
+
+                targetUserPet.setFeed_1(0);
+                targetUserPet.setFeed_2(0);
+                targetUserPet.setFeed_3(0);
+
                 userPetRepository.save(targetUserPet);
             }
         }

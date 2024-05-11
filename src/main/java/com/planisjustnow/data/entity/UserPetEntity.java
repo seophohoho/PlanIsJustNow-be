@@ -40,6 +40,12 @@ public class UserPetEntity {
     private int lastChoice;
     @Column(name="evol")
     private int evol;
+    @Column(name="feed_1")
+    private int feed_1;
+    @Column(name="feed_2")
+    private int feed_2;
+    @Column(name="feed_3")
+    private int feed_3;
 
     public int getLastChoice() {
         return lastChoice;
@@ -143,5 +149,29 @@ public class UserPetEntity {
 
     public void setEvol(int evol) {
         this.evol = evol;
+    }
+
+    public int getFeed_1() {
+        return feed_1;
+    }
+
+    public void setFeed_1(int feed_1) {
+        this.feed_1 = feed_1;
+    }
+
+    public int getFeed_2() {
+        return feed_2;
+    }
+
+    public void setFeed_2(int feed_2) {
+        this.feed_2 = feed_2;
+    }
+
+    public int getFeed_3() {
+        return feed_3;
+    }
+
+    public void setFeed_3(int feed_3) {
+        this.feed_3 = feed_3;
     }
 }
