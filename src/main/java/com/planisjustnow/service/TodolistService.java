@@ -167,6 +167,7 @@ public class TodolistService {
                 targetUserPet.setFeed_1(0);
                 targetUserPet.setFeed_2(0);
                 targetUserPet.setFeed_3(0);
+                targetUserPet.setHands(0);
 
                 userPetRepository.save(targetUserPet);
             }

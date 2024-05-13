@@ -46,6 +46,8 @@ public class UserPetEntity {
     private int feed_2;
     @Column(name="feed_3")
     private int feed_3;
+    @Column(name="hands")
+    private int hands;
 
     public int getLastChoice() {
         return lastChoice;
@@ -173,5 +175,13 @@ public class UserPetEntity {
 
     public void setFeed_3(int feed_3) {
         this.feed_3 = feed_3;
+    }
+
+    public int getHands() {
+        return hands;
+    }
+
+    public void setHands(int hands) {
+        this.hands = hands;
     }
 }

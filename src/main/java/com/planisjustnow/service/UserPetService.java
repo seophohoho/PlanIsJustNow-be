@@ -160,8 +160,14 @@ public class UserPetService {
             if(targetUserPet!=null){
                 int currentFriendShip = targetUserPet.getCurrentFriendship();
                 if(id.equals("hands")){
-                    currentFriendShip = currentFriendShip + handsFriendship;
-                    targetUserPet.setCurrentFriendship(currentFriendShip);
+                    if(targetUserPet.getHands() == 0){
+                        currentFriendShip = currentFriendShip + handsFriendship;
+                        targetUserPet.setCurrentFriendship(currentFriendShip);
+                        targetUserPet.setHands(1);
+                    }
+                    else{
+                        return "fail";
+                    }
                 }
                 else if(id.equals("feed")){
                     LocalTime currentTime = LocalTime.now();
@@ -194,6 +200,9 @@ public class UserPetService {
                         else{
                             return "fail";
                         }
+                    }
+                    else{
+                        return "fail";
                     }
                 }
 
