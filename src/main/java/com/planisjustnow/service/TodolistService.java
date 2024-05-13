@@ -153,23 +153,25 @@ public class TodolistService {
             Long normalTasksCount = todolistRepository.countNormalTask(user, String.valueOf(targetDay));
             Long importantTasksCount = todolistRepository.countImportantTask(user, String.valueOf(targetDay));
             UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user);
-            if(targetUserPet != null){
-                int currentFriendShip = targetUserPet.getCurrentFriendship();
-                NatureEntity targetNature = targetUserPet.getNatureId();
-                int targetNatureBonusFriendship = targetNature.getBonusDrop();
-                int userTodoFailureCount = targetUserPet.getUserId().getTodolistFailureCount();
-                int importResult = targetNatureBonusFriendship + importantTodoValue;
-                int normalResult = targetNatureBonusFriendship + normalTodoValue;
-                int todoFailureValue = userTodoFailureCount*2;
-                currentFriendShip = (currentFriendShip) - (importResult + normalResult + todoFailureValue);
-                targetUserPet.setCurrentFriendship(currentFriendShip);
+            List<UserPetEntity> userPets = userPetRepository.findAllByUserIdEmail(user.getEmail());
+            for(UserPetEntity userPet : userPets){
+                if(userPet.getLastChoice() == 1 && userPet != null){
+                    int currentFriendShip = userPet.getCurrentFriendship();
+                    NatureEntity targetNature = userPet.getNatureId();
+                    int targetNatureBonusFriendship = targetNature.getBonusDrop();
+                    int userTodoFailureCount = userPet.getUserId().getTodolistFailureCount();
+                    int importResult = targetNatureBonusFriendship + importantTodoValue;
+                    int normalResult = targetNatureBonusFriendship + normalTodoValue;
+                    int todoFailureValue = userTodoFailureCount*2;
+                    currentFriendShip = (currentFriendShip) - (importResult + normalResult + todoFailureValue);
 
-                targetUserPet.setFeed_1(0);
-                targetUserPet.setFeed_2(0);
-                targetUserPet.setFeed_3(0);
-                targetUserPet.setHands(0);
-
-                userPetRepository.save(targetUserPet);
+                    userPet.setCurrentFriendship(currentFriendShip);
+                }
+                userPet.setFeed_1(0);
+                userPet.setFeed_2(0);
+                userPet.setFeed_3(0);
+                userPet.setHands(0);
+                userPetRepository.save(userPet);
             }
         }
     }
