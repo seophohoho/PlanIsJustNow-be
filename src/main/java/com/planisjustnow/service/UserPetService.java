@@ -204,6 +204,7 @@ public class UserPetService {
                     else{
                         return "fail";
                     }
+                    targetUserPet.setCurrentFriendship(currentFriendShip);
                 }
 
                 if(currentFriendShip <= targetUserPet.getMaxFriendship_0()){targetUserPet.setEvol(0);}
