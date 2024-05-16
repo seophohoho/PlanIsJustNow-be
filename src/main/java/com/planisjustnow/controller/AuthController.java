@@ -29,7 +29,6 @@ public class AuthController {
             responseDto = new ResponseDto("fail","nothing data.",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
-
     }
     @PostMapping("check")
     public ResponseEntity<ResponseDto> orderCheckAuthCode(@RequestBody AuthDto authDto){
