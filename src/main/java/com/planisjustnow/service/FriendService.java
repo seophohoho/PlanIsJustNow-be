@@ -26,11 +26,9 @@ public class FriendService {
             LocalDate today = LocalDate.now();
             Optional<UserEntity> user = userRepository.findById(userId);
             Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
-            FriendEntity friendEntity_1 = new FriendEntity(user.get(),targetUser.get(),0,String.valueOf(today));
-            FriendEntity friendEntity_2 = new FriendEntity(targetUser.get(),user.get(),0,String.valueOf(today));
+            FriendEntity friendEntity = new FriendEntity(targetUser.get(),user.get(),0,String.valueOf(today));
 
-            friendRepository.save(friendEntity_1);
-            friendRepository.save(friendEntity_2);
+            friendRepository.save(friendEntity);
 
         }catch (Exception e){
             return "fail";
