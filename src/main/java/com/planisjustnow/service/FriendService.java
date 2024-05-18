@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class FriendService {
@@ -61,9 +62,7 @@ public class FriendService {
             LocalDate today = LocalDate.now();
 
             Optional<UserEntity> user = userRepository.findById(userId);
-            System.out.println("check?? 1");
             Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
-            System.out.println("check?? 2");
             Optional<FriendEntity> friend = friendRepository.findByFriendRequestInfo(user.get(),targetUser.get());
             friend.get().setIsFriend(1);
             FriendEntity friendEntity = new FriendEntity(targetUser.get(),user.get(),1,String.valueOf(today));
@@ -72,7 +71,16 @@ public class FriendService {
             friendRepository.save(friendEntity);
 
         }catch (Exception e){
-            System.out.println("check?? error");
+            return null;
+        }
+        return "success";
+    }
+    public String requestFriendReject(String userId, UserInfoDto userInfoDto){
+        try {
+            Optional<UserEntity> user = userRepository.findById(userId);
+            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+            friendRepository.deleteFriendRequest(user.get(),targetUser.get());
+        }catch (Exception e){
             return null;
         }
         return "success";
