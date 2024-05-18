@@ -9,9 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
     @Query("SELECT t FROM FriendEntity t WHERE t.fromUser = :user AND t.isFriend = 0")
     List<FriendEntity> findAllByUserIdEmail(@Param("user") UserEntity user);
+    @Query("SELECT t FROM FriendEntity t WHERE t.fromUser = :user AND t.toUser = :target AND t.isFriend = 0")
+    Optional<FriendEntity> findByFriendRequestInfo(@Param("user") UserEntity user, @Param("target") UserEntity target);
 }

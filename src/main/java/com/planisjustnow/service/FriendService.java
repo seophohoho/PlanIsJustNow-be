@@ -56,4 +56,25 @@ public class FriendService {
             return null;
         }
     }
+    public String requestFriendAccept(String userId,UserInfoDto userInfoDto){
+        try{
+            LocalDate today = LocalDate.now();
+
+            Optional<UserEntity> user = userRepository.findById(userId);
+            System.out.println("check?? 1");
+            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+            System.out.println("check?? 2");
+            Optional<FriendEntity> friend = friendRepository.findByFriendRequestInfo(user.get(),targetUser.get());
+            friend.get().setIsFriend(1);
+            FriendEntity friendEntity = new FriendEntity(targetUser.get(),user.get(),1,String.valueOf(today));
+
+            friendRepository.save(friend.get());
+            friendRepository.save(friendEntity);
+
+        }catch (Exception e){
+            System.out.println("check?? error");
+            return null;
+        }
+        return "success";
+    }
 }

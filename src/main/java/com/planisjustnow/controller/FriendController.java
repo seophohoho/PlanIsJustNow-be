@@ -59,4 +59,21 @@ public class FriendController {
         }
         return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
     }
+    @PostMapping("request-accept")
+    public ResponseEntity<ResponseDto> orderRequestFriendAccept(@RequestBody UserInfoDto userInfoDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest, httpServletResponse);
+        if (userId.equals("fail:Token-not-found")) {
+            responseDto = new ResponseDto("redirect", "/", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        String result = friendService.requestFriendAccept(userId,userInfoDto);
+        if (result.equals("success")) {
+            responseDto = new ResponseDto("success", ".", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        } else {
+            responseDto = new ResponseDto("fail", "Unexpected error", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
