@@ -3,6 +3,8 @@ package com.planisjustnow.controller;
 import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.data.dto.UserInfoDto;
 import com.planisjustnow.service.FriendService;
+import com.planisjustnow.service.TodolistService;
+import com.planisjustnow.service.UserPetService;
 import com.planisjustnow.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +26,10 @@ import java.util.Map;
 public class FriendController {
     @Autowired
     private FriendService friendService;
+    @Autowired
+    private TodolistService todolistService;
+    @Autowired
+    private UserPetService userPetService;
     @Autowired
     private JwtUtil jwtUtil;
     @PostMapping("request")
@@ -50,7 +56,7 @@ public class FriendController {
             responseDto = new ResponseDto("redirect", "/", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
-        Map<String, List<Map<String, Object>>> result = friendService.requestSelectFriend(userId);
+        List<Object> result = friendService.selectFriend(userId,"request");
         if(result.isEmpty()){
             responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
         }
@@ -84,7 +90,86 @@ public class FriendController {
             responseDto = new ResponseDto("redirect", "/", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
-        String result = friendService.requestFriendReject(userId,userInfoDto);
+        String result = friendService.requestFriendReject(userId, userInfoDto);
+        if (result.equals("success")) {
+            responseDto = new ResponseDto("success", ".", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        } else {
+            responseDto = new ResponseDto("fail", "Unexpected error", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("select")
+    public ResponseEntity<ResponseDto> orderSelectFriend(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest){
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest, httpServletResponse);
+        if (userId.equals("fail:Token-not-found")) {
+            responseDto = new ResponseDto("redirect", "/", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        List<Object> result = friendService.selectFriend(userId,"real");
+        if(result.isEmpty()){
+            responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
+        }
+        else{
+            responseDto = new ResponseDto("success", ".", result,null);
+        }
+        return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+    }
+    @PostMapping("select-detail-todolist")
+    public ResponseEntity<ResponseDto> orderSelectTodolistDetail(@RequestBody UserInfoDto userInfoDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest, httpServletResponse);
+        if (userId.equals("fail:Token-not-found")) {
+            responseDto = new ResponseDto("redirect", "/", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
+        if (tasks.isEmpty()) {
+            responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+        }
+        else if(tasks == null){
+            responseDto = new ResponseDto("fail", "Unexpected error", null,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+        }
+        else{
+            responseDto = new ResponseDto("success", ".", tasks,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        }
+    }
+    @PostMapping("select-detail-pet")
+    public ResponseEntity<ResponseDto> orderSelectPetDetail(@RequestBody UserInfoDto userInfoDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest, httpServletResponse);
+        if (userId.equals("fail:Token-not-found")) {
+            responseDto = new ResponseDto("redirect", "/", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        Map<String, Object> result = userPetService.isHasPet(userInfoDto.getEmail());
+        List<?> resultList = (List<?>) result.get("result");
+        if(resultList.isEmpty()){
+            responseDto = new ResponseDto("success","nothing",new ArrayList<>(),result.get("userInfo"));
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+        }
+        else if(result == null){
+            responseDto = new ResponseDto("fail",".",null,null);
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.BAD_REQUEST);
+        }
+        else{
+            responseDto = new ResponseDto("success","has",result.get("result"),result.get("userInfo"));
+            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+        }
+    }
+    @PostMapping("delete")
+    public ResponseEntity<ResponseDto> orderDeleteFriend(@RequestBody UserInfoDto userInfoDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest, httpServletResponse);
+        if (userId.equals("fail:Token-not-found")) {
+            responseDto = new ResponseDto("redirect", "/", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        String result = friendService.deleteFriend(userId,userInfoDto);
         if (result.equals("success")) {
             responseDto = new ResponseDto("success", ".", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);

@@ -16,11 +16,17 @@ import java.util.Optional;
 @Repository
 public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
     @Query("SELECT t FROM FriendEntity t WHERE t.fromUser = :user AND t.isFriend = 0")
-    List<FriendEntity> findAllByUserIdEmail(@Param("user") UserEntity user);
+    List<FriendEntity> findAllRequestFriend(@Param("user") UserEntity user);
     @Query("SELECT t FROM FriendEntity t WHERE t.fromUser = :user AND t.toUser = :target AND t.isFriend = 0")
     Optional<FriendEntity> findByFriendRequestInfo(@Param("user") UserEntity user, @Param("target") UserEntity target);
     @Transactional
     @Modifying
     @Query("DELETE FROM FriendEntity t WHERE t.fromUser = :user AND t.toUser =:target AND t.isFriend = 0")
     void deleteFriendRequest(@Param("user") UserEntity user, @Param("target") UserEntity target);
+    @Query("SELECT t FROM FriendEntity t WHERE t.fromUser = :user AND t.isFriend = 1")
+    List<FriendEntity> findAllRealFriend(@Param("user") UserEntity user);
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM FriendEntity t WHERE t.fromUser = :userA AND t.toUser =:userB AND t.isFriend = 1")
+    void deleteFriend(@Param("userA") UserEntity userA, @Param("userB") UserEntity userB);
 }
