@@ -29,4 +29,8 @@ public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
     @Modifying
     @Query("DELETE FROM FriendEntity t WHERE t.fromUser = :userA AND t.toUser =:userB AND t.isFriend = 1")
     void deleteFriend(@Param("userA") UserEntity userA, @Param("userB") UserEntity userB);
+    @Query("SELECT EXISTS(SELECT 1 FROM FriendEntity t WHERE t.fromUser = :target AND t.toUser =:user AND t.isFriend = 0)")
+    boolean isExistRequest(@Param("user") UserEntity user, @Param("target") UserEntity target);
+    @Query("SELECT EXISTS(SELECT 1 FROM FriendEntity t WHERE t.fromUser = :user AND t.toUser =:target AND t.isFriend = 1)")
+    boolean isExist(@Param("user") UserEntity user, @Param("target") UserEntity target);
 }
