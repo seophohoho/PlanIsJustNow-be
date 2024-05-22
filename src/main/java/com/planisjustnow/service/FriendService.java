@@ -36,6 +36,9 @@ public class FriendService {
             if(friendRepository.isExist(user.get(),targetUser.get())){
                 return "fail:Exist-friend";
             }
+            if(friendRepository.isExistTargetRequest(user.get(),targetUser.get())){
+                return "fail:Exist-target";
+            }
             FriendEntity friendEntity = new FriendEntity(targetUser.get(),user.get(),0,String.valueOf(today));
             friendRepository.save(friendEntity);
         }catch (Exception e){
