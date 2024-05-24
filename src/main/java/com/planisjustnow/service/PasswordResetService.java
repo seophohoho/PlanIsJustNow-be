@@ -24,6 +24,9 @@ public class PasswordResetService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AuthRepository authRepository;
     public PasswordResetService() {
         // 비밀번호를 초기화하려는 사용자의 정보 맵에 저장
         userDatabase = new HashMap<>(); // 사용자 정보 입력
@@ -47,6 +50,21 @@ public class PasswordResetService {
             return false; //이메일 전송 실패
         }
     }
+
+    public boolean verificationCode(String email, String code) {
+        String vaildCode = authRepository.findByEmail(email).getCode();
+        if(vaildCode.equals(code)) {
+            UserEntity userEntity = userRepository.findByEmail(email);
+            userEntity.setPassword(""); //비밀번호 초기화
+            userRepository.save(userEntity);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
 
     // 이메일 인증 요청 메서드
     public ResponseEntity<ResponseDto> sendEmailVerificationCode(AuthDto authdto) {

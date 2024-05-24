@@ -56,6 +56,10 @@ public class UserEntity {
         this.image = imageUrl;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public UserEntity(){}
     public UserEntity(String username, String email, String password, String nickname, int todolistFailureCount){ //DB 구조가 바뀌면서 충돌 예외처리
         this.username = username;

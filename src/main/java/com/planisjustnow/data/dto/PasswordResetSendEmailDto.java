@@ -1,6 +1,6 @@
 package com.planisjustnow.data.dto;
 
-public class PasswordResetDto {
+public class PasswordResetSendEmailDto {
         String userId; // user_id -> userId로 수정 (변수이름수정)
         String email;
 
