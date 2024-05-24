@@ -22,9 +22,9 @@ public class PasswordResetController {
     public ResponseEntity<ResponseDto> requestPasswordReset(@RequestBody PasswordResetDto passwordResetDto) {
 
         //String result = passwordResetService.resetPassword("test", "ljw00391@gmail.com"); //테스트
-        String result = passwordResetService.resetPassword(passwordResetDto.getUserId(), passwordResetDto.getEmail());
+        boolean result = passwordResetService.resetPassword(passwordResetDto.getUserId(), passwordResetDto.getEmail());
 
-        if ("비밀번호 초기화 성공".equals(result)) {
+        if (result) {
             return new ResponseEntity<>(new ResponseDto("success", "Verification code sent successfully", null, null), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseDto("fail", "User not found or email not matched", null, null), HttpStatus.NOT_FOUND);

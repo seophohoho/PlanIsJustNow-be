@@ -35,9 +35,17 @@ public class PasswordResetService {
     }
 
     // 비밀번호 초기화 요청을 처리하는 메서드
-    public String resetPassword(String userId, String email) {
+    public boolean resetPassword(String userId, String email) {
         String userEmail = userRepository.findByUsername(userId).getEmail();
-        return userEmail; //DB 테스트 과정
+        if(userEmail.equals(email)) {
+            AuthDto authDto = new AuthDto();
+            authDto.setEmail(email);
+            sendEmailVerificationCode(authDto);
+            return true; //이메일 전송 성공
+        }
+        else {
+            return false; //이메일 전송 실패
+        }
     }
 
     // 이메일 인증 요청 메서드

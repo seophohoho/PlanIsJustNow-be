@@ -14,7 +14,7 @@ public class UserPetEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "username")
     private UserEntity userId;
     @ManyToOne
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
