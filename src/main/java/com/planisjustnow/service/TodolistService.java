@@ -144,28 +144,32 @@ public class TodolistService {
             return null;
         }
     }
-    @Scheduled(cron = "0 19 16 * * ?") //<- 00시 00분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
+    @Scheduled(cron = "0 42 17 * * ?") //<- 00시 00분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
     public void calcDropFriendShip(){
         LocalDate today = LocalDate.now();
-        LocalDate targetDay = today.minusDays(1); //<-실제 서비스 환경에서는 이 변수 쓰자.
+        LocalDate targetDay = today.minusDays(1);
+
         List<UserEntity> userList = userRepository.findAll();
         for(UserEntity user : userList){
+            int userTodoFailureCount = user.getTodolistFailureCount();
             Long normalTasksCount = todolistRepository.countNormalTask(user, String.valueOf(targetDay));
             Long importantTasksCount = todolistRepository.countImportantTask(user, String.valueOf(targetDay));
-            UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user);
+
             List<UserPetEntity> userPets = userPetRepository.findAllByUserIdEmail(user.getEmail());
             for(UserPetEntity userPet : userPets){
                 if(userPet.getLastChoice() == 1 && userPet != null){
-                    int currentFriendShip = userPet.getCurrentFriendship();
-                    NatureEntity targetNature = userPet.getNatureId();
-                    int targetNatureBonusFriendship = targetNature.getBonusDrop();
-                    int userTodoFailureCount = userPet.getUserId().getTodolistFailureCount();
-                    int importResult = targetNatureBonusFriendship + importantTodoValue;
-                    int normalResult = targetNatureBonusFriendship + normalTodoValue;
-                    int todoFailureValue = userTodoFailureCount*2;
-                    currentFriendShip = (currentFriendShip) - (importResult + normalResult + todoFailureValue);
+                    UserPetEntity targetUserPet = userPetRepository.findLastChoicePet(user);
+                    int targetPetCurrentFriendShip = targetUserPet.getCurrentFriendship();
 
-                    userPet.setCurrentFriendship(currentFriendShip);
+                    NatureEntity targetNature = targetUserPet.getNatureId();
+                    int targetNatureBonusFriendship = targetNature.getBonusDrop();
+
+                    int importResult = (int)(importantTasksCount * (targetNatureBonusFriendship + importantTodoValue));
+                    int normalResult = (int)(normalTasksCount*(targetNatureBonusFriendship + normalTodoValue));
+
+                    targetPetCurrentFriendShip = targetPetCurrentFriendShip - (importResult + normalResult + (userTodoFailureCount*2));
+
+                    userPet.setCurrentFriendship(targetPetCurrentFriendShip);
                 }
                 userPet.setFeed_1(0);
                 userPet.setFeed_2(0);
