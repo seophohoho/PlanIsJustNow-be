@@ -35,5 +35,4 @@ public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
     boolean isExistTargetRequest(@Param("user") UserEntity user, @Param("target") UserEntity target);
     @Query("SELECT EXISTS(SELECT 1 FROM FriendEntity t WHERE t.fromUser = :user AND t.toUser =:target AND t.isFriend = 1)")
     boolean isExist(@Param("user") UserEntity user, @Param("target") UserEntity target);
-
 }

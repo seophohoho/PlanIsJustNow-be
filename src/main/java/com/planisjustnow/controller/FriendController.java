@@ -60,6 +60,23 @@ public class FriendController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("request-count")
+    public ResponseEntity<ResponseDto> orderRequestCount(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        ResponseDto responseDto;
+        String userId = jwtUtil.parseToken(httpServletRequest, httpServletResponse);
+        if (userId.equals("fail:Token-not-found")) {
+            responseDto = new ResponseDto("redirect", "/", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+        List<Object> result = friendService.selectFriend(userId,"request");
+        if(result.isEmpty()){
+            responseDto = new ResponseDto("success","empty",0,null);
+        }
+        else{
+            responseDto = new ResponseDto("success", ".", result.size(),null);
+        }
+        return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+    }
     @GetMapping("request-select")
     public ResponseEntity<ResponseDto> orderSelectRequestFriend(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         ResponseDto responseDto;
