@@ -25,12 +25,13 @@ public class AccountService {
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String signUp(AccountSignUpDto accountSignUpDto){
-        UserEntity accountInfo = new UserEntity(accountSignUpDto.getEmail(),
-                passwordEncoder.encode(accountSignUpDto.getPassword()),
-                accountSignUpDto.getNickname(),
-                0);
-        if(accountRepository.existsById(accountSignUpDto.getEmail())){
+    public String signUp(String email, String password, String nickname, String profileUrl){
+        UserEntity accountInfo = new UserEntity(email,
+                passwordEncoder.encode(password),
+                nickname,
+                0,
+                profileUrl);
+        if(accountRepository.existsById(email)){
             return "fail:Email is already in use";
         }
 

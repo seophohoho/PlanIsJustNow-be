@@ -1,18 +1,21 @@
 package com.planisjustnow.controller;
 
+import com.planisjustnow.config.S3Config;
 import com.planisjustnow.data.dto.AccountSignInDto;
 import com.planisjustnow.data.dto.AccountSignUpDto;
 import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.service.AccountService;
+import com.planisjustnow.service.S3Service;
 import com.planisjustnow.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/api/account")
@@ -20,10 +23,15 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
     @Autowired
+    private S3Service s3Service;
+    @Autowired
     private JwtUtil jwtUtil;
+
     @PostMapping("signup")
-    public ResponseEntity<ResponseDto> orderSignUp(@RequestBody AccountSignUpDto accountSignUpDto){
-        String result = accountService.signUp(accountSignUpDto);
+    public ResponseEntity<ResponseDto> orderSignUp(@RequestPart("email") String email,@RequestPart("password") String password,@RequestPart("nickname") String nickname,@RequestPart("file") MultipartFile file) throws IOException {
+        String profileUrl = s3Service.saveFile(file,"profile/");
+        String result = accountService.signUp(email,password,nickname,profileUrl);
+
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);

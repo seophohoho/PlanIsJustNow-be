@@ -144,7 +144,7 @@ public class TodolistService {
             return null;
         }
     }
-    @Scheduled(cron = "0 42 17 * * ?") //<- 00시 00분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
+    @Scheduled(cron = "0 54 20 * * ?") //<- 00시 00분 00초 *(아무날짜)월 *(아무날짜)일에 해당 메소드를 실행.
     public void calcDropFriendShip(){
         LocalDate today = LocalDate.now();
         LocalDate targetDay = today.minusDays(1);

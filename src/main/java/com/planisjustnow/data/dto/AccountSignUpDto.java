@@ -1,9 +1,12 @@
 package com.planisjustnow.data.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class AccountSignUpDto {
     String email;
     String password;
     String nickname;
+    MultipartFile file;
 
     public String getEmail() {
         return email;
@@ -27,5 +30,13 @@ public class AccountSignUpDto {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 }
