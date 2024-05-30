@@ -55,6 +55,9 @@ public class FriendController {
         }else if(result.equals("fail:Exist-target")) {
             ResponseDto responseDto = new ResponseDto("fail", "Exist Target Request error", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }else if(result.equals("fail:nothing")){
+            ResponseDto responseDto = new ResponseDto("fail", "Not Exist User", null, null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }else {
             ResponseDto responseDto = new ResponseDto("fail", "Unexpected error", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);

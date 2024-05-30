@@ -27,16 +27,20 @@ public class FriendService {
             LocalDate today = LocalDate.now();
             Optional<UserEntity> user = userRepository.findById(userId);
             Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
-            if(user.get().getEmail().equals(targetUser.get().getEmail())){
+            System.out.println(targetUser);
+            if(targetUser.isEmpty()){
+                return "fail:nothing";
+            }
+            else if(user.get().getEmail().equals(targetUser.get().getEmail())){
                 return "fail:Self";
             }
-            if(friendRepository.isExistRequest(user.get(),targetUser.get())){
+            else if(friendRepository.isExistRequest(user.get(),targetUser.get())){
                 return "fail:Exist-request";
             }
-            if(friendRepository.isExist(user.get(),targetUser.get())){
+            else if(friendRepository.isExist(user.get(),targetUser.get())){
                 return "fail:Exist-friend";
             }
-            if(friendRepository.isExistTargetRequest(user.get(),targetUser.get())){
+            else if(friendRepository.isExistTargetRequest(user.get(),targetUser.get())){
                 return "fail:Exist-target";
             }
             FriendEntity friendEntity = new FriendEntity(targetUser.get(),user.get(),0,String.valueOf(today));

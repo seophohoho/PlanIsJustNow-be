@@ -106,6 +106,8 @@ public class UserPetService {
         try {
             Map<String, Object> resultMap = new HashMap<>();
             List<UserPetEntity> userPets = findUserPetInfo(userId);
+            System.out.println("test!!");
+            System.out.println(userId);
             Optional<UserEntity> user = userRepository.findById(userId);
             List<Object> lst = new ArrayList<>();
             for(UserPetEntity userPet: userPets){
