@@ -156,19 +156,32 @@ public class FriendController {
             responseDto = new ResponseDto("redirect", "/", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
-        Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
-        if (tasks.isEmpty()) {
-            responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
-            return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+        String result = friendService.isFriend(userId,userInfoDto);
+        if(result.equals("fail:Is not user")){
+            responseDto = new ResponseDto("fail", "Is not User", null,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
-        else if(tasks == null){
-            responseDto = new ResponseDto("fail", "Unexpected error", null,null);
+        else if(result.equals("fail:Is not friend")){
+            responseDto = new ResponseDto("fail", "Is not friend", null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         else{
-            responseDto = new ResponseDto("success", ".", tasks,null);
-            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+            Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
+            if (tasks.isEmpty()) {
+                responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
+                return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
+            }
+            else if(tasks == null){
+                responseDto = new ResponseDto("fail", "Unexpected error", null,null);
+                return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+            }
+            else{
+                responseDto = new ResponseDto("success", ".", tasks,null);
+                return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+            }
+
         }
+
     }
     @PostMapping("select-detail-pet")
     public ResponseEntity<ResponseDto> orderSelectPetDetail(@RequestBody UserInfoDto userInfoDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){

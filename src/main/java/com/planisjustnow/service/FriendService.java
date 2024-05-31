@@ -121,4 +121,19 @@ public class FriendService {
         }
         return "success";
     }
+    public String isFriend(String userId,UserInfoDto userInfoDto){
+        Optional<UserEntity> user = userRepository.findById(userId);
+        Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+
+        if(targetUser.isEmpty()){
+            return "fail:Is not user";
+        }
+
+        if(friendRepository.isExist(user.get(),targetUser.get())){
+            return "success";
+        }
+        else{
+            return "fail:Is not friend";
+        }
+    }
 }
