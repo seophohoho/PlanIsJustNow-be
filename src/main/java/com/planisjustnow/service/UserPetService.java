@@ -113,6 +113,7 @@ public class UserPetService {
             for(UserPetEntity userPet: userPets){
                 Map<String,Object> petDetails = new HashMap<>();
                 petDetails.put("idx",userPet.getIdx());
+                petDetails.put("path",userPet.getPetId().getPath());
                 petDetails.put("petId",userPet.getPetId());
                 petDetails.put("natureId",userPet.getNatureId());
                 petDetails.put("nickname",userPet.getPetName());
