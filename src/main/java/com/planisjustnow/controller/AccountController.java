@@ -7,6 +7,7 @@ import com.planisjustnow.data.dto.ResponseDto;
 import com.planisjustnow.service.AccountService;
 import com.planisjustnow.service.S3Service;
 import com.planisjustnow.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,17 @@ public class AccountController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }
         else{
+            ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("logout")
+    public ResponseEntity<ResponseDto> orderLogout(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest){
+        try{
+            jwtUtil.logout(httpServletResponse);
+            ResponseDto responseDto = new ResponseDto("success",".",null,null);
+            return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
+        }catch (Exception e){
             ResponseDto responseDto = new ResponseDto("fail","Unexpected error",null,null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
         }

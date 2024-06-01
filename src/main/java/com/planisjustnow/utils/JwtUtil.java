@@ -76,5 +76,9 @@ public class JwtUtil {
         secureRandom.nextBytes(key);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(key);
     }
+    public void logout(HttpServletResponse httpServletResponse){
+        String cookieValue = "token=; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=0";
+        httpServletResponse.addHeader("Set-Cookie", cookieValue);
+    }
 
 }
