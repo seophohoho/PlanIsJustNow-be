@@ -1,26 +1,26 @@
 package com.planisjustnow.utils;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
+import java.security.Key;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final String jwtSecretKey;
+    private final Key jwtSecretKey;
     private final long jwtExpiry;
     private final boolean isSecure;
 
     public JwtUtil(@Value("${jwt.key}") String jwtSecretKey, @Value("${jwt.expiry}") long jwtExpiry, @Value("${jwt.secure}") boolean isSecure) {
-        this.jwtSecretKey = jwtSecretKey;
+        this.jwtSecretKey = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());  // 키 생성 방법 변경
         this.jwtExpiry = jwtExpiry;
         this.isSecure = isSecure;
     }
@@ -30,7 +30,7 @@ public class JwtUtil {
                 .setSubject(userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpiry))
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey.getBytes())
+                .signWith(jwtSecretKey, SignatureAlgorithm.HS256)
                 .compact();
 
         Cookie cookie = new Cookie("token", token);
@@ -55,9 +55,7 @@ public class JwtUtil {
                     .orElse(null);
 
             if (token != null) {
-                byte[] key = jwtSecretKey.getBytes();
-
-                JwtParser parser = Jwts.parserBuilder().setSigningKey(key).build();
+                JwtParser parser = Jwts.parserBuilder().setSigningKey(jwtSecretKey).build();
                 Jws<Claims> claimsJws = parser.parseClaimsJws(token);
 
                 String userId = claimsJws.getBody().getSubject();
@@ -73,13 +71,6 @@ public class JwtUtil {
             return "fail:Token-not-found";
         }
         return null;
-    }
-
-    public static String generateHS256SecretKey(int keyLength) {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] key = new byte[keyLength];
-        secureRandom.nextBytes(key);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(key);
     }
 
     public void logout(HttpServletResponse httpServletResponse) {
