@@ -17,12 +17,10 @@ public class JwtUtil {
 
     private final Key jwtSecretKey;
     private final long jwtExpiry;
-    private final boolean isSecure;
 
-    public JwtUtil(@Value("${jwt.key}") String jwtSecretKey, @Value("${jwt.expiry}") long jwtExpiry, @Value("${jwt.secure}") boolean isSecure) {
+    public JwtUtil(@Value("${jwt.key}") String jwtSecretKey, @Value("${jwt.expiry}") long jwtExpiry) {
         this.jwtSecretKey = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
         this.jwtExpiry = jwtExpiry;
-        this.isSecure = isSecure;
     }
 
     public void createToken(String userId, HttpServletResponse httpServletResponse) {
@@ -36,15 +34,8 @@ public class JwtUtil {
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        if (isSecure) {
-            cookie.setSecure(true);
-            // Manually set the SameSite attribute
-            String setCookieHeader = createSameSiteCookieValue(cookie, "None");
-            httpServletResponse.addHeader("Set-Cookie", setCookieHeader);
-        } else {
-            cookie.setSecure(false);
-            httpServletResponse.addCookie(cookie);
-        }
+        cookie.setSecure(false);  // Secure 속성을 설정하지 않음
+        httpServletResponse.addCookie(cookie);
     }
 
     public String parseToken(HttpServletRequest request, HttpServletResponse httpServletResponse) {
@@ -80,31 +71,7 @@ public class JwtUtil {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);
-        if (isSecure) {
-            cookie.setSecure(true);
-            // Manually set the SameSite attribute
-            String setCookieHeader = createSameSiteCookieValue(cookie, "None");
-            httpServletResponse.addHeader("Set-Cookie", setCookieHeader);
-        } else {
-            cookie.setSecure(false);
-            httpServletResponse.addCookie(cookie);
-        }
-    }
-
-    private String createSameSiteCookieValue(Cookie cookie, String sameSite) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(cookie.getName()).append("=").append(cookie.getValue()).append(";");
-        builder.append(" Path=").append(cookie.getPath()).append(";");
-        if (cookie.getSecure()) {
-            builder.append(" Secure;");
-        }
-        if (cookie.isHttpOnly()) {
-            builder.append(" HttpOnly;");
-        }
-        builder.append(" SameSite=").append(sameSite).append(";");
-        if (cookie.getMaxAge() > 0) {
-            builder.append(" Max-Age=").append(cookie.getMaxAge()).append(";");
-        }
-        return builder.toString();
+        cookie.setSecure(false);  // Secure 속성을 설정하지 않음
+        httpServletResponse.addCookie(cookie);
     }
 }
