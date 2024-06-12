@@ -20,7 +20,7 @@ public class JwtUtil {
     private final boolean isSecure;
 
     public JwtUtil(@Value("${jwt.key}") String jwtSecretKey, @Value("${jwt.expiry}") long jwtExpiry, @Value("${jwt.secure}") boolean isSecure) {
-        this.jwtSecretKey = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());  // 키 생성 방법 변경
+        this.jwtSecretKey = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
         this.jwtExpiry = jwtExpiry;
         this.isSecure = isSecure;
     }
@@ -38,7 +38,9 @@ public class JwtUtil {
         cookie.setPath("/");
         if (isSecure) {
             cookie.setSecure(true);
-            httpServletResponse.addHeader("Set-Cookie", createSameSiteCookieValue(cookie, "None"));
+            // Manually set the SameSite attribute
+            String setCookieHeader = createSameSiteCookieValue(cookie, "None");
+            httpServletResponse.addHeader("Set-Cookie", setCookieHeader);
         } else {
             cookie.setSecure(false);
             httpServletResponse.addCookie(cookie);
@@ -80,7 +82,9 @@ public class JwtUtil {
         cookie.setMaxAge(0);
         if (isSecure) {
             cookie.setSecure(true);
-            httpServletResponse.addHeader("Set-Cookie", createSameSiteCookieValue(cookie, "None"));
+            // Manually set the SameSite attribute
+            String setCookieHeader = createSameSiteCookieValue(cookie, "None");
+            httpServletResponse.addHeader("Set-Cookie", setCookieHeader);
         } else {
             cookie.setSecure(false);
             httpServletResponse.addCookie(cookie);
