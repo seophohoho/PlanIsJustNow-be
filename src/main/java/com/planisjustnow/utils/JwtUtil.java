@@ -36,16 +36,13 @@ public class JwtUtil {
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setSecure(isSecure);
-        // Set cookie without SameSite attribute
-        httpServletResponse.addCookie(cookie);
-
-        // Manually add SameSite attribute to the cookie
-        String sameSiteAttribute = "SameSite=None";
-        String setCookieHeader = String.format("%s=%s; Path=%s; HttpOnly; %s; %s",
-                cookie.getName(), cookie.getValue(), cookie.getPath(),
-                sameSiteAttribute, isSecure ? "Secure" : "");
-        httpServletResponse.addHeader("Set-Cookie", setCookieHeader);
+        if (isSecure) {
+            cookie.setSecure(true);
+            httpServletResponse.addHeader("Set-Cookie", createSameSiteCookieValue(cookie, "None"));
+        } else {
+            cookie.setSecure(false);
+            httpServletResponse.addCookie(cookie);
+        }
     }
 
     public String parseToken(HttpServletRequest request, HttpServletResponse httpServletResponse) {
@@ -60,7 +57,6 @@ public class JwtUtil {
             if (token != null) {
                 byte[] key = jwtSecretKey.getBytes();
 
-                // 새로운 API로 변경된 부분
                 JwtParser parser = Jwts.parserBuilder().setSigningKey(key).build();
                 Jws<Claims> claimsJws = parser.parseClaimsJws(token);
 
@@ -91,15 +87,29 @@ public class JwtUtil {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);
-        cookie.setSecure(isSecure);
-        // Set cookie without SameSite attribute
-        httpServletResponse.addCookie(cookie);
+        if (isSecure) {
+            cookie.setSecure(true);
+            httpServletResponse.addHeader("Set-Cookie", createSameSiteCookieValue(cookie, "None"));
+        } else {
+            cookie.setSecure(false);
+            httpServletResponse.addCookie(cookie);
+        }
+    }
 
-        // Manually add SameSite attribute to the cookie
-        String sameSiteAttribute = "SameSite=None";
-        String setCookieHeader = String.format("%s=; Path=%s; HttpOnly; %s; Max-Age=0; %s",
-                cookie.getName(), cookie.getPath(),
-                sameSiteAttribute, isSecure ? "Secure" : "");
-        httpServletResponse.addHeader("Set-Cookie", setCookieHeader);
+    private String createSameSiteCookieValue(Cookie cookie, String sameSite) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(cookie.getName()).append("=").append(cookie.getValue()).append(";");
+        builder.append(" Path=").append(cookie.getPath()).append(";");
+        if (cookie.getSecure()) {
+            builder.append(" Secure;");
+        }
+        if (cookie.isHttpOnly()) {
+            builder.append(" HttpOnly;");
+        }
+        builder.append(" SameSite=").append(sameSite).append(";");
+        if (cookie.getMaxAge() > 0) {
+            builder.append(" Max-Age=").append(cookie.getMaxAge()).append(";");
+        }
+        return builder.toString();
     }
 }
