@@ -48,11 +48,11 @@ public class UserEntity {
     }
 
     public UserEntity(){}
-    public UserEntity(String email, String password, String nickname, int todolistFailureCount, String imageUrl){
+    public UserEntity(String username, String email, String password, String nickname, int todolistFailureCount) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.todolistFailureCount = todolistFailureCount;
-        this.imageUrl = imageUrl;
     }
 }
