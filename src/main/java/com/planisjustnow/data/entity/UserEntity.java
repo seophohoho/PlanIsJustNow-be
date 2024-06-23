@@ -68,12 +68,4 @@ public class UserEntity {
         this.nickname = nickname;
         this.todolistFailureCount = todolistFailureCount;
     }
-
-    public UserEntity(String email, String password, String nickname, int todolistFailureCount){ //DB 구조가 바뀌면서 충돌 예외처리
-        this.username = "test";
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.todolistFailureCount = todolistFailureCount;
-    }
 }
