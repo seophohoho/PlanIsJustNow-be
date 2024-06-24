@@ -25,8 +25,10 @@ public class AccountService {
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String signUp(String email, String password, String nickname, String profileUrl){
-        UserEntity accountInfo = new UserEntity(email,
+    public String signUp(String username,String email, String password, String nickname, String profileUrl){
+        UserEntity accountInfo = new UserEntity(
+                username,
+                email,
                 passwordEncoder.encode(password),
                 nickname,
                 0,
@@ -44,7 +46,7 @@ public class AccountService {
     }
     public String signIn(AccountSignInDto accountSignInDto,HttpServletResponse response){
         try{
-            UserEntity accountInfo = findAccountInfo(accountSignInDto.getEmail());
+            UserEntity accountInfo = findAccountInfo(accountSignInDto.getUsername());
             if(passwordEncoder.matches(accountSignInDto.getPassword(),accountInfo.getPassword())){
                 return "success";
             }
@@ -57,7 +59,7 @@ public class AccountService {
         }
     }
     @Transactional
-    public UserEntity findAccountInfo(String email){return accountRepository.findByEmail(email);}
+    public UserEntity findAccountInfo(String username){return accountRepository.findByUsername(username);}
     @Transactional
     public UserEntity saveAccountInfo(UserEntity userEntity){
         return accountRepository.save(userEntity);

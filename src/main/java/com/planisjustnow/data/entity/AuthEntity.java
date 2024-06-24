@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "email_buffer")
+@Table(name = "tEmailAuth")
 public class AuthEntity {
     @Id
-    @Column(name="email")
+    @Column(name="email",nullable = false)
     private String email;
-    @Column(name="code")
+    @Column(name="code",nullable = false)
     private String code;
 
     public String getEmail() {

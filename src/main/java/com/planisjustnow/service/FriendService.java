@@ -26,7 +26,7 @@ public class FriendService {
         try {
             LocalDate today = LocalDate.now();
             Optional<UserEntity> user = userRepository.findById(userId);
-            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getUsername());
             System.out.println(targetUser);
             if(targetUser.isEmpty()){
                 return "fail:nothing";
@@ -67,7 +67,7 @@ public class FriendService {
                 Map<String,Object> friendDetails = new HashMap<>();
                 friendDetails.put("email",friend.getToUser().getEmail());
                 friendDetails.put("nickname",friend.getToUser().getNickname());
-                friendDetails.put("profile",friend.getToUser().getImageUrl());
+                friendDetails.put("profile",friend.getToUser().getImage());
                 friendDetails.put("startDate",friend.getStartDate());
                 lst.add(friendDetails);
             }
@@ -81,7 +81,7 @@ public class FriendService {
             LocalDate today = LocalDate.now();
 
             Optional<UserEntity> user = userRepository.findById(userId);
-            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getUsername());
             Optional<FriendEntity> friend = friendRepository.findByFriendRequestInfo(user.get(),targetUser.get());
             friend.get().setIsFriend(1);
             FriendEntity friendEntity = new FriendEntity(targetUser.get(),user.get(),1,String.valueOf(today));
@@ -100,7 +100,7 @@ public class FriendService {
     public String requestFriendReject(String userId, UserInfoDto userInfoDto){
         try {
             Optional<UserEntity> user = userRepository.findById(userId);
-            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getUsername());
             friendRepository.deleteFriendRequest(user.get(),targetUser.get());
         }catch (Exception e){
             return "fail";
@@ -110,7 +110,7 @@ public class FriendService {
     public String deleteFriend(String userId, UserInfoDto userInfoDto){
         try {
             Optional<UserEntity> user = userRepository.findById(userId);
-            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+            Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getUsername());
             System.out.println("check1");
             friendRepository.deleteFriend(user.get(),targetUser.get());
             System.out.println("check2");
@@ -123,7 +123,7 @@ public class FriendService {
     }
     public String isFriend(String userId,UserInfoDto userInfoDto){
         Optional<UserEntity> user = userRepository.findById(userId);
-        Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getEmail());
+        Optional<UserEntity> targetUser = userRepository.findById(userInfoDto.getUsername());
 
         if(targetUser.isEmpty()){
             return "fail:Is not user";

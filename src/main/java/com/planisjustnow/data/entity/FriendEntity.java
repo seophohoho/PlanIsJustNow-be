@@ -4,28 +4,28 @@ import jakarta.persistence.*;
 import org.checkerframework.checker.units.qual.C;
 
 @Entity
-@Table(name="friend")
+@Table(name="tFriend")
 public class FriendEntity {
     @Id
-    @Column(name="idx")
+    @Column(name="idx",nullable=false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idx;
+    private int idx;
     @ManyToOne
-    @JoinColumn(name = "from_user", referencedColumnName = "id")
+    @JoinColumn(name = "fromUser", referencedColumnName = "username",nullable = false)
     private UserEntity fromUser;
     @ManyToOne
-    @JoinColumn(name = "to_user", referencedColumnName = "id")
+    @JoinColumn(name = "toUser", referencedColumnName = "username",nullable = false)
     private UserEntity toUser;
-    @Column(name="is_friend")
+    @Column(name="is_friend",nullable = false)
     private int isFriend;
-    @Column(name="start_date")
+    @Column(name="start_date",nullable = false)
     private String startDate;
 
     public long getIdx() {
         return idx;
     }
 
-    public void setIdx(long idx) {
+    public void setIdx(int idx) {
         this.idx = idx;
     }
 

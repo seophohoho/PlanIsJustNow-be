@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "nature_info")
+@Table(name = "tNatureInfo")
 public class NatureEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id",nullable = false)
     private Integer natureId;
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     private String name;
-    @Column(name = "bonus_increase")
+    @Column(name = "bonus_increase",nullable = false)
     private int bonusIncrease;
-    @Column(name = "bonus_drop")
+    @Column(name = "bonus_drop",nullable = false)
     private int bonusDrop;
 
     @OneToMany(mappedBy = "natureId")

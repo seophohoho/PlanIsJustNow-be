@@ -29,9 +29,9 @@ public class AccountController {
     private JwtUtil jwtUtil;
 
     @PostMapping("signup")
-    public ResponseEntity<ResponseDto> orderSignUp(@RequestPart("email") String email,@RequestPart("password") String password,@RequestPart("nickname") String nickname,@RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<ResponseDto> orderSignUp(@RequestPart("username") String username, @RequestPart("email") String email,@RequestPart("password") String password,@RequestPart("nickname") String nickname,@RequestPart("file") MultipartFile file) throws IOException {
         String profileUrl = s3Service.saveFile(file,"profile/");
-        String result = accountService.signUp(email,password,nickname,profileUrl);
+        String result = accountService.signUp(username,email,password,nickname,profileUrl);
 
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null,null);
@@ -51,7 +51,7 @@ public class AccountController {
         String result = accountService.signIn(accountSignInDto,httpServletResponse);
         if(result.equals("success")){
             ResponseDto responseDto = new ResponseDto("success",".",null,null);
-            jwtUtil.createToken(accountSignInDto.getEmail(),httpServletResponse);
+            jwtUtil.createToken(accountSignInDto.getUsername(),httpServletResponse);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
         }
         else if(result.equals("false:Not matche")){

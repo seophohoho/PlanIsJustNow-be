@@ -7,46 +7,44 @@ import java.util.List;
 import java.util.Optional;
 
 @Entity
-@Table(name = "user_pet")
+@Table(name = "tUserPet")
 public class UserPetEntity {
     @Id
-    @Column(name="idx")
+    @Column(name="idx",nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "username")
+    @JoinColumn(name = "username", referencedColumnName = "username",nullable = false)
     private UserEntity userId;
     @ManyToOne
-    @JoinColumn(name = "pet_id", referencedColumnName = "id")
+    @JoinColumn(name = "petId", referencedColumnName = "id",nullable = false)
     private PetEntity petId;
     @ManyToOne
-    @JoinColumn(name = "nature_id", referencedColumnName = "id")
+    @JoinColumn(name = "natureId", referencedColumnName = "id",nullable = false)
     private NatureEntity natureId;
-    @Column(name="name")
+    @Column(name="name",nullable = false)
     private String petName;
-    @Column(name="max_friendship")
+    @Column(name="max_friendship",nullable = false)
     private int maxFriendship;
-    @Column(name="current_friendship")
+    @Column(name="current_friendship",nullable = false)
     private int currentFriendship;
-    @Column(name="friendship_0")
+    @Column(name="friendship_0",nullable = false)
     private int maxFriendship_0;
-    @Column(name="friendship_1")
+    @Column(name="friendship_1",nullable = false)
     private int maxFriendship_1;
-    @Column(name="friendship_2")
-    private int maxFriendship_2;
-    @Column(name="run_way_count")
+    @Column(name="run_way_count",nullable = false)
     private int runWayCount;
-    @Column(name="last_choice")
+    @Column(name="last_choice",nullable = false)
     private int lastChoice;
-    @Column(name="evol")
+    @Column(name="evol",nullable = false)
     private int evol;
-    @Column(name="feed_1")
+    @Column(name="feed_1",nullable = false)
     private int feed_1;
-    @Column(name="feed_2")
+    @Column(name="feed_2",nullable = false)
     private int feed_2;
-    @Column(name="feed_3")
+    @Column(name="feed_3",nullable = false)
     private int feed_3;
-    @Column(name="hands")
+    @Column(name="hands",nullable = false)
     private int hands;
 
     public int getLastChoice() {
@@ -135,14 +133,6 @@ public class UserPetEntity {
 
     public void setMaxFriendship_1(int maxFriendship_1) {
         this.maxFriendship_1 = maxFriendship_1;
-    }
-
-    public int getMaxFriendship_2() {
-        return maxFriendship_2;
-    }
-
-    public void setMaxFriendship_2(int maxFriendship_2) {
-        this.maxFriendship_2 = maxFriendship_2;
     }
 
     public int getEvol() {

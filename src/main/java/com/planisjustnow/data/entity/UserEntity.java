@@ -9,63 +9,82 @@ import java.lang.String;
 
 
 @Entity
-@Table(name = "user_info")
+@Table(name = "tUser")
 public class UserEntity {
     @Id
-    @Column(name = "username")
+    @Column(name = "username",nullable = false)
     private String username;
 
-    @Column(name = "email")
+    @Column(name = "email",nullable = false)
     private String email;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname",nullable = false)
     private String nickname;
 
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     private String password;
 
-    @Column(name = "todolist_failure_count")
+    @Column(name = "todolist_failure_count",nullable = false)
     private int todolistFailureCount;
 
-    @Column(name = "image")
+    @Column(name = "image",nullable = false)
     private String image;
-//    @OneToMany(mappedBy = "userId")
-//    private List<UserPetEntity> userEntities = new ArrayList<UserPetEntity>();
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public int getTodolistFailureCount() {
-        return todolistFailureCount;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getImageUrl() {
-        return image;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.image = imageUrl;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public int getTodolistFailureCount() {
+        return todolistFailureCount;
+    }
+
+    public void setTodolistFailureCount(int todolistFailureCount) {
+        this.todolistFailureCount = todolistFailureCount;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public UserEntity(){}
-    public UserEntity(String username, String email, String password, String nickname, int todolistFailureCount) {
+    public UserEntity(String username, String email, String password, String nickname, int todolistFailureCount,String image) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.todolistFailureCount = todolistFailureCount;
+        this.image = image;
     }
 }

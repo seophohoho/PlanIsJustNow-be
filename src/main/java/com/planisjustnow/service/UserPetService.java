@@ -30,8 +30,6 @@ public class UserPetService {
     @Autowired
     private PetRepository petRepository;
     @Autowired
-    private AllPetRepository allPetRepository;
-    @Autowired
     private JwtUtil jwtUtil;
     @Transactional
     public String petSignup(String userId, PetSignUpDto petSignUpDto){
@@ -39,7 +37,6 @@ public class UserPetService {
         int maxFriendship = getRandomMaxFriendship();
         int maxFriendship_0 = maxFriendship/3;
         int maxFriendship_1 = maxFriendship_0 + (maxFriendship/3);
-        int maxFriendship_2 = maxFriendship_1 + (maxFriendship/3);
         List<UserPetEntity> userPets = findUserPetInfo(userId);
         if(userPets.size() > 0){
             for(UserPetEntity userPet: userPets){
@@ -60,7 +57,6 @@ public class UserPetService {
             userPetEntity.setCurrentFriendship(0);
             userPetEntity.setMaxFriendship_0(maxFriendship_0);
             userPetEntity.setMaxFriendship_1(maxFriendship_1);
-            userPetEntity.setMaxFriendship_2(maxFriendship_2);
             userPetEntity.setRunWayCount(0);
             userPetEntity.setLastChoice(1);
             userPetEntity.setEvol(0);
@@ -129,7 +125,7 @@ public class UserPetService {
             Map<String,Object> userDetails = new HashMap<>();
             userDetails.put("nickname",user.get().getNickname());
             userDetails.put("userId",user.get().getEmail());
-            userDetails.put("profileUrl",user.get().getImageUrl());
+            userDetails.put("profileUrl",user.get().getImage());
             resultMap.put("userInfo",userDetails);
             return resultMap;
         }catch(NullPointerException e){
@@ -140,7 +136,7 @@ public class UserPetService {
     public Map<String,Object> getAllPetInfo(){
         Map<String, Object> resultMap = new HashMap<>();
         try {
-            List<AllPetEntity> list = findAllPetInfo();
+            List<UserPetEntity> list = findAllPetInfo();
             if(list.size() > 0){
                 resultMap.put("result", "success");
                 resultMap.put("list", list);
@@ -212,7 +208,6 @@ public class UserPetService {
 
                 if(currentFriendShip <= targetUserPet.getMaxFriendship_0()){targetUserPet.setEvol(0);}
                 else if(currentFriendShip <= targetUserPet.getMaxFriendship_1()){targetUserPet.setEvol(1);}
-                else if(currentFriendShip <= targetUserPet.getMaxFriendship_2()){targetUserPet.setEvol(2);}
 
                 int evol = targetUserPet.getEvol();
 
@@ -224,7 +219,7 @@ public class UserPetService {
         }
         return null;
     }
-    public List<AllPetEntity> findAllPetInfo(){return allPetRepository.findAll();}
+    public List<UserPetEntity> findAllPetInfo(){return userPetRepository.findAll();}
     public List<UserPetEntity> findUserPetInfo(String email){
         return userPetRepository.findAllByUserIdEmail(email);
     }

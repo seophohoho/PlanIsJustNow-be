@@ -166,7 +166,7 @@ public class FriendController {
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
         }
         else{
-            Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getEmail());
+            Map<String, List<Map<String, Object>>> tasks = todolistService.selectTodolist(userInfoDto.getUsername());
             if (tasks.isEmpty()) {
                 responseDto = new ResponseDto("success","empty",new ArrayList<>(),null);
                 return new ResponseEntity<ResponseDto>(responseDto,HttpStatus.OK);
@@ -191,7 +191,7 @@ public class FriendController {
             responseDto = new ResponseDto("redirect", "/", null, null);
             return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.UNAUTHORIZED);
         }
-        Map<String, Object> result = userPetService.isHasPet(userInfoDto.getEmail());
+        Map<String, Object> result = userPetService.isHasPet(userInfoDto.getUsername());
         List<?> resultList = (List<?>) result.get("result");
         if(resultList.isEmpty()){
             responseDto = new ResponseDto("success","nothing",new ArrayList<>(),result.get("userInfo"));

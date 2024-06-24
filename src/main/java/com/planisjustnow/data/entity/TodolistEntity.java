@@ -3,25 +3,26 @@ package com.planisjustnow.data.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "todolist")
+@Table(name = "tTodolist")
 public class TodolistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
+    @Column(name = "idx",nullable = false)
     private Long idx;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "username")
+    @JoinColumn(name = "user_id", referencedColumnName = "username",nullable = false)
     private UserEntity userId;
-    @Column(name = "title")
+    @Column(name = "title",nullable = false)
     private String title;
-    @Column(name = "start_date")
+    @Column(name = "start_date",nullable = false)
     private String startDate;
-    @Column(name = "time")
+    @Column(name = "time",nullable = false)
     private String time;
-    @Column(name = "is_important")
+    @Column(name = "is_important",nullable = false)
     private Integer isImportant;
-    @Column(name = "is_complete")
+    @Column(name = "is_complete",nullable = false)
     private Integer isComplete;
+
     public Integer getIsImportant() {
         return isImportant;
     }
@@ -60,7 +61,7 @@ public class TodolistEntity {
     public void setIsComplete(Integer isComplete) {
         this.isComplete = isComplete;
     }
-    TodolistEntity(){}
+    public TodolistEntity(){}
     public TodolistEntity(UserEntity userId,String title,String startDate,String time, Integer isImportant,Integer isComplete){
         this.userId = userId;
         this.title = title;
