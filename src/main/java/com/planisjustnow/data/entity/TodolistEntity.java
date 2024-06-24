@@ -10,7 +10,7 @@ public class TodolistEntity {
     @Column(name = "idx")
     private Long idx;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "username")
     private UserEntity userId;
     @Column(name = "title")
     private String title;
