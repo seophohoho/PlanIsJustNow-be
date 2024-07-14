@@ -100,6 +100,7 @@ public class PasswordResetService {
         }
 
         userEntity.setPassword(password);
+        userRepository.save(userEntity);
         return true;
     }
 }
