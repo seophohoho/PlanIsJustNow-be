@@ -38,7 +38,7 @@ public class PasswordResetService {
     }
 
     // 비밀번호 초기화 요청을 처리하는 메서드
-    public boolean resetPassword(String userId, String email) {
+    public boolean sendMain(String userId, String email) {
         String userEmail = userRepository.findByUsername(userId).getEmail();
         if(userEmail.equals(email)) {
             AuthDto authDto = new AuthDto();
@@ -89,5 +89,17 @@ public class PasswordResetService {
             ResponseDto responseDto = new ResponseDto("fail", "Unexpected error", null, null);
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    // 비밀번호 초기화 메서드
+    public boolean resetPassword(String userId, String password) {
+        // String userEmail = userRepository.findByUsername(userId).getEmail();
+        UserEntity userEntity = userRepository.findByUsername(userId);
+        if(userEntity == null) {
+            return false;
+        }
+
+        userEntity.setPassword(password);
+        return true;
     }
 }
