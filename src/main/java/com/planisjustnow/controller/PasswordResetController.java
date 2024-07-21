@@ -45,7 +45,7 @@ public class PasswordResetController {
 
     @PostMapping("reset-password")
     public ResponseEntity<ResponseDto> resetPassword(@RequestBody PasswordResetDto passwordResetDto) {
-        boolean result = passwordResetService.resetPassword(passwordResetDto.getUserId() ,passwordResetDto.getPassword());
+        boolean result = passwordResetService.resetPassword(passwordResetDto.getUserId() ,passwordResetDto.getNowPassword(),passwordResetDto.getNewPassword());
 
         if (result) {
             return new ResponseEntity<>(new ResponseDto("success", "Reset Password successfully", null, null), HttpStatus.OK);

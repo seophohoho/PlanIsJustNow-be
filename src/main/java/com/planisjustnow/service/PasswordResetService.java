@@ -150,14 +150,14 @@ public class PasswordResetService {
     }
 
     // 비밀번호 초기화 메서드
-    public boolean resetPassword(String userId, String password) {
+    public boolean resetPassword(String userId, String nowPassword, String newPassword) {
         // String userEmail = userRepository.findByUsername(userId).getEmail();
         UserEntity userEntity = userRepository.findByUsername(userId);
-        if(userEntity == null) {
+        if(!userEntity.getPassword().equals(nowPassword)) {
             return false;
         }
 
-        userEntity.setPassword(password);
+        userEntity.setPassword(newPassword);
         userRepository.save(userEntity);
         return true;
     }

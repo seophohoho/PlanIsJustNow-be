@@ -2,15 +2,24 @@ package com.planisjustnow.data.dto;
 
 public class PasswordResetDto {
     String userId;
-    String password;
+    String nowPassword;
+    String newPassword;
 
     // Getter, Setter 메서드
-    public String getPassword() {
-        return password;
+    public String getNowPassword() {
+        return nowPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setNowPassword(String password) {
+        this.nowPassword = password;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String password) {
+        this.newPassword = password;
     }
 
     public String getUserId() {
