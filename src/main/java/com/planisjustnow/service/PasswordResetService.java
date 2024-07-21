@@ -9,6 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import java.security.SecureRandom;
+import java.util.Random;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +24,19 @@ import java.util.Map;
 public class PasswordResetService {
     // 맵을 통해 비밀번호를 초기화하려는 사용자의 정보 저장
     private final Map<String, String> userDatabase;
+
+    // Password Reset Service
+    private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+    private static final String NUMBER = "0123456789";
+    private static final String SPECIAL_CHARS = "!@#$%&*()_+-=[]|,./?><";
+
+    private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER + SPECIAL_CHARS;
+    private static SecureRandom random = new SecureRandom();
+    private static int length = 12;
+
+    @Autowired
+    private JavaMailSender emailSender;
 
     @Autowired
     private AuthService authService; // AuthService 주입, 이메일 인증
@@ -51,11 +70,50 @@ public class PasswordResetService {
         }
     }
 
+    public MimeMessage createMailMessage(String email, String password) {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        try {
+            helper.setTo(email);
+            helper.setSubject("새로운 패스워드입니다.");
+            helper.setText(password);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
+
+    public boolean sendEmail(String email, String password) {
+        MimeMessage emailForm = createMailMessage(email, password);
+        try {
+            emailSender.send(emailForm);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static String generatePassword() {
+        if (length < 1) {
+            throw new IllegalArgumentException("Password length must be greater than 0.");
+        }
+
+        StringBuilder password = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(PASSWORD_ALLOW_BASE.length());
+            password.append(PASSWORD_ALLOW_BASE.charAt(randomIndex));
+        }
+        return password.toString();
+    }
+
     public boolean verificationCode(String email, String code) {
         String vaildCode = authRepository.findByEmail(email).getCode();
         if(vaildCode.equals(code)) {
             UserEntity userEntity = userRepository.findByEmail(email);
-            userEntity.setPassword(""); //비밀번호 초기화
+            userEntity.setPassword(generatePassword());
+            if(!sendEmail(email, userEntity.getPassword())) {
+                return false;
+            }
             userRepository.save(userEntity);
             return true;
         }
